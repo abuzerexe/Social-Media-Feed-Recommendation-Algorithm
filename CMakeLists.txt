@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.29.6)
 project(SocialMediaFeed)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -13,4 +13,6 @@ add_executable(SocialMediaFeed main.cpp
         UserManager.cpp
         UserManager.h
         ConnectionsManager.cpp
-        ConnectionsManager.h)
+        ConnectionsManager.h
+        UserAnalytics.cpp
+        UserAnalytics.h)
