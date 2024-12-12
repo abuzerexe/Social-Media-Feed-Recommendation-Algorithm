@@ -35,6 +35,36 @@ public:
     Node* find(T value);
     void insertAt(int index, T value);
     void deleteByValue(T value);
+
+
+    // Iterator class for the use of range-based for loops
+    class Iterator {
+    private:
+        Node* current;
+    public:
+        Iterator(Node* node) : current(node) {}
+
+        Iterator& operator++() {
+            if (current) current = current->next;
+            return *this;
+        }
+
+        T& operator*() {
+            return current->data;
+        }
+
+        bool operator!=(const Iterator& other) const {
+            return current != other.current;
+        }
+    };
+
+    Iterator begin() {
+        return Iterator(head);
+    }
+
+    Iterator end() {
+        return Iterator(nullptr);
+    }
 };
 
 #include "DoublyLinkedList.tpp" // Include the template implementation
