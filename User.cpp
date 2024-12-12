@@ -63,9 +63,6 @@ DoublyLinkedList<string> User::getUserInterests() {
     return interests;
 }
 
-DoublyLinkedList<int> User::getUserConnections() {
-    return connections;
-}
 
 // Additional methods
 
