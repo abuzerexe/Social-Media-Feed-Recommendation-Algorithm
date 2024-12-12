@@ -137,44 +137,7 @@ void User::updateInterests() {
     
 }
 
-void User::addConnection(int userId){
 
-    connections.pushBack(userId);
-
-    cout << "Connected Successfully! \n";
-}
-
-
-void User::removeConnection(int userId){
-
-    if (connections.contains(userId))
-    {
-        connections.deleteByValue(userId);
-        cout << "Connection removed successfully \n"; 
-
-    }else{
-        cout << "No such connection. \n";
-    }    
-}
-
-
-bool User::isConnectedTo(int userId){
-
-    if (connections.contains(userId))
-    {
-        return true;
-
-    }else{
-        return false;
-    }   
-}
-
-
-int User::getNumConnections(){
-
-    return connections.size();
-
-}
 
 void User::displayUserDetails() {
     cout << "User ID: " << getUserId() << endl;
@@ -183,7 +146,6 @@ void User::displayUserDetails() {
     cout << "Email: " << getUserEmail() << endl;
     cout << "Interests: " << endl;
     interests.displayForward();
-    cout << "Connections No. : " << getNumConnections()<< endl;
 }
 
 

@@ -41,13 +41,7 @@ int main() {
     bool added4 = userManager.addUser(user4);
     cout << "Duplicate user added: " << (added4 ? "Yes" : "No") << endl;
 
-    user1.addConnection(2);
-    user1.addConnection(3);
-    // cout<<user1.isConnectedTo(2)<<endl;
-    user1.removeConnection(2);
-    // cout<<user1.isConnectedTo(2)<<endl;
-    cout<<user1.getNumConnections()<<endl;
-    // user1.displayUserDetails();
+
 
     // List all users
     // cout << "\nListing all users:\n";

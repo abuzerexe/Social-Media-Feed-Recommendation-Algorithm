@@ -39,11 +39,6 @@ public:
     void updateInterests();
     void removeInterests();
 
-    // Methods for connections
-    void addConnection(int userId);
-    void removeConnection(int userId);
-    bool isConnectedTo(int userId);
-    int getNumConnections();
 
     // Display methods
     void displayUserDetails();
