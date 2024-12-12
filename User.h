@@ -11,7 +11,7 @@ private:
     std::string name;
     std::string email;
     DoublyLinkedList<std::string> interests;
-    DoublyLinkedList<int> connections;
+
 
     static int userCounter; // Static counter for generating unique user IDs
 

@@ -47,11 +47,9 @@ int main() {
     user1.removeConnection(2);
     // cout<<user1.isConnectedTo(2)<<endl;
     cout<<user1.getNumConnections()<<endl;
-    user1.addInterests();
-    user1.updateInterests();
     // user1.displayUserDetails();
 
-    // // List all users
+    // List all users
     // cout << "\nListing all users:\n";
     // userManager.listAllUsers();
 
@@ -74,9 +72,9 @@ int main() {
     // }
 
     // // Remove a user by ID
-    // cout << "\nRemoving user with ID 1:\n";
-    // bool removed = userManager.removeUser(1);
-    //  cout << " user removed: " << (removed ? "Yes" : "No") << endl;
+    cout << "\nRemoving user with ID 1:\n";
+    bool removed = userManager.removeUser(1);
+     cout << " user removed: " << (removed ? "Yes" : "No") << endl;
 
 
     // // Attempt to remove a non-existing user
