@@ -20,6 +20,7 @@ void Stack::push(const Post& post) {
     newNode->next = top;
     // New node becomes the new top
     top = newNode;
+    size++ ;
 }
 
 void Stack::pop() {
@@ -31,6 +32,7 @@ void Stack::pop() {
     Node* temp = top;
     top = top->next;
     delete temp;
+    size-- ;
 }
 
 Post Stack::peek() const {
@@ -54,4 +56,8 @@ void Stack::displayAllPosts() const {
         std::cout << std::endl;
         current = current->next;
     }
+}
+
+int Stack::getNumberOfPosts() const {
+   return size ;
 }
