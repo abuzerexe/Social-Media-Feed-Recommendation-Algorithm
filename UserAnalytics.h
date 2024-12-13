@@ -14,7 +14,7 @@ class UserAnalytics {
 public:
 
     std::pmr::vector<User> getMostActiveUsers();
-    std::pmr::vector<User> getInfluentialUsers();
+    User getInfluentialUsers();
     int getIsolatedUserCount() ;
 
 };

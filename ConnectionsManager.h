@@ -20,6 +20,7 @@ public:
     void displayMutualConnections();
     void displayUserConnections();
     void displayUserConnections(int userId);
+    int getUserConnectionCount(int userId);
 };
 
 

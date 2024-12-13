@@ -14,6 +14,7 @@ public:
 class Stack {
 private:
     Node* top;
+    int size ;
 
 public:
     // Constructor
@@ -36,6 +37,8 @@ public:
 
     // Display all posts in the stack (most recent first)
     void displayAllPosts() const;
+
+    int getNumberOfPosts() const ;
 };
 
 #endif // STACK_H

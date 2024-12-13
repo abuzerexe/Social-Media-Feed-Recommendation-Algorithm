@@ -13,4 +13,5 @@ add_executable(SocialMediaFeed main.cpp
         UserManager.cpp
         UserManager.h
         ConnectionsManager.cpp
-        ConnectionsManager.h)
+        ConnectionsManager.h
+        UserAnalytics.cpp)
