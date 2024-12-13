@@ -2,7 +2,7 @@
 #define POSTMANAGEMENT_H
 
 #include "UserManager.h"
-#include "Queue.h"
+#include "Stack.h"
 #include "Post.h"
 
 class PostManagement {
