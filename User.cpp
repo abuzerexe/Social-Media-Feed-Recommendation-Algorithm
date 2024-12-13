@@ -156,21 +156,22 @@ void User::displayUserInterests() {
 
 // post management methods
 void User::addPost(const Post& post) {
-    postQueue.enqueue(post);
+    postStack.push(post);  
 }
 
 void User::removePost() {
-    if (!postQueue.isEmpty()) {
-        postQueue.dequeue();
+    if (!postStack.isEmpty()) {
+        postStack.pop();  
     }
 }
 
+
 void User::displayPosts() {
-    postQueue.displayAllPosts();
+    postStack.displayAllPosts();
 }
 
-Queue& User::getPostQueue() {
-    return postQueue;
+Stack& User::getPostStack() {  
+    return postStack;
 }
 
 
