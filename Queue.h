@@ -18,6 +18,7 @@ class Queue {
 private:
     Node* front;
     Node* rear;
+    int size = 0;
 
 public:
     // Constructor
@@ -40,6 +41,9 @@ public:
 
     // Display all posts in the queue
     void displayAllPosts() const;
+
+    int getNumberOfPosts() const ;
+
 };
 
 #endif // QUEUE_H

@@ -22,6 +22,7 @@ void Queue::enqueue(const Post& post) {
         rear->next = newNode;
         rear = newNode;
     }
+    size++ ;
 }
 
 void Queue::dequeue() {
@@ -38,6 +39,7 @@ void Queue::dequeue() {
     if (front == nullptr) {
         rear = nullptr;
     }
+    size-- ;
 }
 
 Post Queue::peek() const {
@@ -61,4 +63,8 @@ void Queue::displayAllPosts() const {
         std::cout << std::endl;
         current = current->next;
     }
+}
+
+int Queue::getNumberOfPosts() const {
+    return size ;
 }
