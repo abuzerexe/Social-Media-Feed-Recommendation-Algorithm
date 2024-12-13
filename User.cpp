@@ -154,5 +154,25 @@ void User::displayUserInterests() {
     interests.displayForward();
 }
 
+// post management methods
+void User::addPost(const Post& post) {
+    postQueue.enqueue(post);
+}
+
+void User::removePost() {
+    if (!postQueue.isEmpty()) {
+        postQueue.dequeue();
+    }
+}
+
+void User::displayPosts() {
+    postQueue.displayAllPosts();
+}
+
+Queue& User::getPostQueue() {
+    return postQueue;
+}
+
+
 
 

@@ -3,6 +3,8 @@
 
 #include <string>
 #include "DoublyLinkedList.h"
+#include "Queue.h"
+#include "Post.h"
 
 class User {
 private:
@@ -11,6 +13,7 @@ private:
     std::string name;
     std::string email;
     DoublyLinkedList<std::string> interests;
+    Queue postQueue; 
 
 
     static int userCounter; // Static counter for generating unique user IDs
@@ -43,6 +46,13 @@ public:
     // Display methods
     void displayUserDetails();
     void displayUserInterests();
+
+    //post management
+    void addPost(const Post& post);
+    void removePost();
+    void displayPosts();
+    Queue& getPostQueue();
+    
 };
 
 #endif // USER_H
