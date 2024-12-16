@@ -3,7 +3,7 @@
 
 #include <string>
 #include "DoublyLinkedList.h"
-#include "Stack.h"
+#include "PostLinkList.h"
 #include "Post.h"
 
 class User {
@@ -13,8 +13,7 @@ private:
     std::string name;
     std::string email;
     DoublyLinkedList<std::string> interests;
-    Stack postStack;
-
+    PostLinkedList postList;  
 
     static int userCounter; // Static counter for generating unique user IDs
 
@@ -42,7 +41,6 @@ public:
     void updateInterests();
     void removeInterests();
 
-
     // Display methods
     void displayUserDetails();
     void displayUserInterests();
@@ -51,7 +49,7 @@ public:
     void addPost(const Post& post);
     void removePost();
     void displayPosts();
-    Stack& getPostStack();
+    PostLinkedList& getPostList();  
     
 };
 
