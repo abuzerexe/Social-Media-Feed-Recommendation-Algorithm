@@ -156,22 +156,21 @@ void User::displayUserInterests() {
 
 // post management methods
 void User::addPost(const Post& post) {
-    postStack.push(post);  
+    postList.add(post);  
 }
 
 void User::removePost() {
-    if (!postStack.isEmpty()) {
-        postStack.pop();  
+    if (!postList.isEmpty()) {
+        postList.remove();  
     }
 }
 
-
 void User::displayPosts() {
-    postStack.displayAllPosts();
+    postList.displayAllPosts();  
 }
 
-Stack& User::getPostStack() {  
-    return postStack;
+PostLinkedList& User::getPostList() { 
+    return postList;
 }
 
 
