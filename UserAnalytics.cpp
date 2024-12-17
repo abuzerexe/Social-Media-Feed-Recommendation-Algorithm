@@ -15,7 +15,7 @@ std::pmr::vector<User> UserAnalytics::getMostActiveUsers() {
 
         for (const auto& pair : UserManager::userById) {
                 User user = pair.second;
-                if ( user.getPostStack().getNumberOfPosts() >= 5 ) {
+                if ( user.getPostList().getNumberOfPosts() >= 5 ) {
                         mostActiveUsers.push_back(user);
                 }
         }
