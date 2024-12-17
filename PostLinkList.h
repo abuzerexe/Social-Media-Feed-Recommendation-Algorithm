@@ -19,6 +19,7 @@ class PostLinkedList {
 private:
     Node* head;
     Node* tail;
+    int size ;
 
 public:
     // Constructor
@@ -41,6 +42,9 @@ public:
 
   
     void displayAllPosts() const;
+
+    int getNumberOfPosts() const;
+
 };
 
 #endif // POSTLINKEDLIST_H

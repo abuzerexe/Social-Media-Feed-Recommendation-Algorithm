@@ -2,7 +2,9 @@
 #include "User.h"
 #include <iostream>
 #include <string>
- 
+
+#include "ConnectionsManager.h"
+
 using namespace std;
 
 int main() {
@@ -40,6 +42,13 @@ int main() {
     User user4("az", "abuzerexe","az@gmail.com", initialInterests1);
     bool added4 = userManager.addUser(user4);
     cout << "Duplicate user added: " << (added4 ? "Yes" : "No") << endl;
+
+
+    ConnectionsManager connectionsManager;
+    connectionsManager.addConnection(1, 2);
+    connectionsManager.addConnection(1, 3);
+    connectionsManager.addConnection(2, 3);
+    connectionsManager.addConnection(3, 1);
 
 
 

@@ -49,6 +49,7 @@ public:
     void addPost(const Post& post);
     void removePost();
     void displayPosts();
+
     PostLinkedList& getPostList();  
     
 };

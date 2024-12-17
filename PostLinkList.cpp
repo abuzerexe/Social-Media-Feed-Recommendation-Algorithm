@@ -24,6 +24,7 @@ void PostLinkedList::add(const Post& post) {
         tail->next = newNode;
         tail = newNode;
     }
+    size++ ;
 }
 
 void PostLinkedList::remove() {
@@ -41,7 +42,7 @@ void PostLinkedList::remove() {
         tail = tail->prev;
         tail->next = nullptr;
     }
-    
+    size-- ;
     delete temp;
 }
 
@@ -66,4 +67,8 @@ void PostLinkedList::displayAllPosts() const {
         std::cout << std::endl;
         current = current->next;
     }
+}
+
+int PostLinkedList::getNumberOfPosts() const {
+   return size ;
 }
