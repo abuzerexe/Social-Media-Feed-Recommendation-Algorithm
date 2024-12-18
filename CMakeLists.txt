@@ -15,4 +15,9 @@ add_executable(SocialMediaFeed main.cpp
         ConnectionsManager.cpp
         ConnectionsManager.h
         UserAnalytics.cpp
-        PostLinkList.cpp)
+        PostLinkList.cpp
+        FeedGenerator.cpp
+        Post.cpp
+        Postmanagement.cpp
+        FileHandler.cpp
+        FileHandler.h)

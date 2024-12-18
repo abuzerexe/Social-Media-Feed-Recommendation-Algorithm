@@ -1,6 +1,8 @@
 #include "UserManager.h"
 #include <iostream>
 
+std::unordered_map<string, int> UserManager::userByUserName;
+std::unordered_map<int, User> UserManager::userById;
 
 bool UserManager::addUser(User& user){
 

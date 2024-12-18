@@ -6,7 +6,7 @@ using namespace std;
 
 template <typename T>
 class DoublyLinkedList {
-private:
+public:
     struct Node {
         T data;
         Node* prev;
@@ -14,11 +14,8 @@ private:
 
         Node(T value);
     };
-
     Node* head;
     Node* tail;
-
-public:
     DoublyLinkedList();
     DoublyLinkedList(const DoublyLinkedList<T>& other); 
     ~DoublyLinkedList();

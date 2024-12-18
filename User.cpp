@@ -169,7 +169,7 @@ void User::displayPosts() {
     postList.displayAllPosts();  
 }
 
-PostLinkedList& User::getPostList() { 
+PostLinkedList& User::getPostList()  {
     return postList;
 }
 

@@ -4,24 +4,24 @@
 #include "Post.h"
 
 // Node class definition
-class Node {
-public:
-    Post data;
-    Node* next;
-    Node* prev;
-
-    // Constructor
-    Node(const Post& post) : data(post), next(nullptr), prev(nullptr) {}
-};
 
 // PostLinkedList class definition
 class PostLinkedList {
 private:
-    Node* head;
-    Node* tail;
     int size ;
 
 public:
+    class Node {
+    public:
+        Post data;
+        Node* next;
+        Node* prev;
+
+        // Constructor
+        Node(const Post& post) : data(post), next(nullptr), prev(nullptr) {}
+    };
+    Node* head;
+    Node* tail;
     // Constructor
     PostLinkedList();
 
