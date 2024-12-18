@@ -8,11 +8,10 @@ using namespace std;
 
 class UserManager {
 
-private:
-    unordered_map<int, User> userById;        // userId -> User object
-    unordered_map<string, int> userByUserName; // username -> userId
-
 public:
+    static unordered_map<int, User> userById;        // userId -> User object
+    static unordered_map<string, int> userByUserName; // username -> userId
+
     // Adds a user to the manager, ensuring unique username
     bool addUser(User& user);
 
