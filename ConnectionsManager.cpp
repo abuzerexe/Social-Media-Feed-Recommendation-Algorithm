@@ -73,3 +73,19 @@ vector<int> ConnectionsManager::getConnectionsByUser(int userId) {
     // Convert the set to a vector and return
     return vector<int>(userConnectionsSet.begin(), userConnectionsSet.end());
 }
+
+// Function to display mutual connections for a specific user ID
+vector<int> ConnectionsManager::getMutualConnections(int userId) {
+    set<int> mutualConnectionsSet; // Use a set to ensure no duplicates
+    vector<int> userConnections = getConnectionsByUser(userId);
+    for (int connection : userConnections) {
+        vector<int> connectionConnections = getConnectionsByUser(connection);
+        for (int mutualConnection : connectionConnections) {
+            if (mutualConnection != userId && areConnected(userId, mutualConnection)) {
+                mutualConnectionsSet.insert(mutualConnection);
+            }
+        }
+    }
+    // Convert the set to a vector and return
+    return vector<int>(mutualConnectionsSet.begin(), mutualConnectionsSet.end());
+}

@@ -17,9 +17,7 @@ public:
     void removeConnection(int userID1, int userID2);
     vector<int> getConnectionsByUser(int userId);
     void displayConnections();
-    void displayMutualConnections();
-    void displayUserConnections();
-    void displayUserConnections(int userId);
+    vector<int> getMutualConnections(int userId1);
     int getUserConnectionCount(int userId);
 };
 
