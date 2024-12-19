@@ -55,7 +55,7 @@ void Post::displayPostDetails() const {
 
     // Convert timestamp to readable format
     char buffer[26];
-    ctime_s(buffer, sizeof(buffer), &timestamp);
+    // ctime_s(buffer, sizeof(buffer), &timestamp);
     std::cout << "Timestamp: " << buffer;
 
     // Display interest match score

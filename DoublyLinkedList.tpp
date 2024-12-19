@@ -22,12 +22,6 @@ DoublyLinkedList<T>::DoublyLinkedList(const DoublyLinkedList<T>& other) : head(n
 
 template <typename T>
 DoublyLinkedList<T>::~DoublyLinkedList() {
-    Node* current = head;
-    while (current != nullptr) {
-        Node* temp = current;
-        current = current->next;
-        delete temp;
-    }
 }
 
 template <typename T>
