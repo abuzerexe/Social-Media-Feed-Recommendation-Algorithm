@@ -1,102 +1,471 @@
-#include "UserManager.h"
-#include "User.h"
 #include <iostream>
-#include <string>
+#include <limits>
+#include <iomanip>
+#include <queue>
 
+#include "UserManager.h"
 #include "ConnectionsManager.h"
+#include "PostManagement.h"
+#include "FeedGenerator.h"
+#include "FileHandler.h"
+#include "UserAnalytics.h"
+#include "AllInterests.h"
 
 using namespace std;
 
-int main() {
+class SocialMediaApp {
+private:
     UserManager userManager;
+    ConnectionsManager connectionManager;
+    PostManagement postManagement;
+    FeedGenerator feedGenerator;
+    FileHandler fileHandler;
+    UserAnalytics userAnalytics;
+    User* currentUser;
 
-    DoublyLinkedList<string> initialInterests1;
-    initialInterests1.pushBack("Technology");
-    initialInterests1.pushBack("Gaming");
+    // Helper methods
+    void clearInputBuffer() {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
 
-    DoublyLinkedList<string> initialInterests2;
-    initialInterests2.pushBack("Sports");
-    initialInterests2.pushBack("Photography");
+    void displayHeader(const string& title) {
+        cout << "\n===== " << title << " =====\n";
+    }
 
-    DoublyLinkedList<string> initialInterests3;
-    initialInterests3.pushBack("Fashion");
-    initialInterests3.pushBack("Politics");
+    int getIntInput(const string& prompt, int min = 1, int max = INT_MAX) {
+        int choice;
+        while (true) {
+            cout << prompt;
+            if (cin >> choice) {
+                if (choice >= min && choice <= max) {
+                    clearInputBuffer();
+                    return choice;
+                }
+            }
+            cout << "Invalid input. Please try again.\n";
+            clearInputBuffer();
+        }
+    }
 
-    cout << "Adding users...\n\n";
-    User user1("Abuzer", "abuzerexe","abouzer381@gmail.com", initialInterests1);
-    cout << user1.getUserId()<< endl;
-    User user2("MrLongShlong", "MrlongShlong","mrlongshlong@gmail.com", initialInterests2);
-    cout<< user2.getUserId()<< endl;
-    User user3("MrShortShlong", "MrShortShlong","mrshortshlong@gmail.com", initialInterests3);
-    cout<< user3.getUserId()<< endl;
+    string getStringInput(const string& prompt) {
+        string input;
+        cout << prompt;
+        getline(cin, input);
+        return input;
+    }
 
-    bool added1 = userManager.addUser(user1);
-    bool added2 = userManager.addUser(user2);
-    bool added3 = userManager.addUser(user3);
+    User* selectUser() {
+        displayHeader("Select User");
+        userManager.listAllUsers();
 
-    cout << "User 1 added: " << (added1 ? "Yes" : "No") << endl;
-    cout << "User 2 added: " << (added2 ? "Yes" : "No") << endl;
-    cout << "User 3 added: " << (added3 ? "Yes" : "No") << endl;
+        if (UserManager::userById.empty()) {
+            cout << "No users available. Please add users first.\n";
+            return nullptr;
+        }
 
-    // Attempt to add a user with a duplicate username
-    User user4("az", "abuzerexe","az@gmail.com", initialInterests1);
-    bool added4 = userManager.addUser(user4);
-    cout << "Duplicate user added: " << (added4 ? "Yes" : "No") << endl;
+        int userId = getIntInput("Enter User ID to select: ");
+        User* selectedUser = userManager.getUserById(userId);
 
+        if (!selectedUser) {
+            cout << "User not found.\n";
+            return nullptr;
+        }
 
-    ConnectionsManager connectionsManager;
-    connectionsManager.addConnection(1, 2);
-    connectionsManager.addConnection(1, 3);
-    connectionsManager.addConnection(2, 3);
-    connectionsManager.addConnection(3, 1);
+        return selectedUser;
+    }
 
+    void displayFeed(priority_queue<Post> feed, int postsPerPage = 5) {
+        if (feed.empty()) {
+            cout << "No posts in feed.\n";
+            return;
+        }
 
+        int totalPosts = feed.size();
+        int currentPost = 0;
+        int currentPage = 1;
+        int totalPages = (totalPosts + postsPerPage - 1) / postsPerPage;
 
-    // List all users
-    // cout << "\nListing all users:\n";
-    // userManager.listAllUsers();
+        while (!feed.empty()) {
+            displayHeader("Feed Page " + to_string(currentPage) + "/" + to_string(totalPages));
 
-        // Retrieve a user by ID
-    // cout << "\nRetrieving user with ID 2:\n";
-    // User* retrievedUser = userManager.getUserById(2);
-    // if (retrievedUser) {
-    //     retrievedUser->displayUserDetails();
-    // } else {
-    //     cout << "User not found.\n";
-    // }
+            for (int i = 0; i < postsPerPage && !feed.empty(); ++i) {
+                Post post = feed.top();
+                feed.pop();
 
-    // Retrieve a user by username
-    // cout << "\nRetrieving user with username :\n";
-    // retrievedUser = userManager.getUserByUsername("abuzerexe");
-    // if (retrievedUser) {
-    //     retrievedUser->displayUserDetails();
-    // } else {
-    //     cout << "User not found.\n";
-    // }
+                cout << "\nPost " << ++currentPost << " of " << totalPosts << "\n";
+                cout << "Interest Match Score: " << post.interestMatchScore << "\n";
+                post.displayPostDetails();
+                cout << "------------------------\n";
+            }
 
-    // // Remove a user by ID
-    cout << "\nRemoving user with ID 1:\n";
-    bool removed = userManager.removeUser(1);
-     cout << " user removed: " << (removed ? "Yes" : "No") << endl;
+            if (!feed.empty()) {
+                cout << "\nPress Enter to see next page...";
+                cin.get();
+                currentPage++;
+            }
+        }
+    }
 
+public:
+    SocialMediaApp()
+        : userManager(),
+          connectionManager(),
+          postManagement(userManager),
+          feedGenerator(userManager, connectionManager),
+          fileHandler(userManager, connectionManager),
+          currentUser(nullptr) {}
 
-    // // Attempt to remove a non-existing user
-    // cout << "\nRemoving user with ID 99:\n";
-    // removed = userManager.removeUser(99);
-    // cout << " user removed: " << (removed ? "Yes" : "No") << endl;
+    void run() {
+        while (true) {
+            displayHeader("Social Media Feed Application");
+            if (currentUser) {
+                cout << "Current User: " << currentUser->getUserName() << " (ID: " << currentUser->getUserId() << ")\n\n";
+            }
+            cout << "1. User Management\n";
+            cout << "2. Connections Management\n";
+            cout << "3. Post Management\n";
+            cout << "4. Feed Generation\n";
+            cout << "5. File Operations\n";
+            cout << "6. User Analytics\n";
+            cout << "7. Exit\n";
 
+            int choice = getIntInput("Enter your choice (1-7): ", 1, 7);
 
-    // // List all users again
-    // cout << "\nListing all users after removal:\n";
-    // userManager.listAllUsers();
+            switch (choice) {
+                case 1: userManagementMenu(); break;
+                case 2: connectionsManagementMenu(); break;
+                case 3: postManagementMenu(); break;
+                case 4: feedGenerationMenu(); break;
+                case 5: fileOperationsMenu(); break;
+                case 6: userAnalyticsMenu(); break;
+                case 7:
+                    cout << "Exiting application. Goodbye!\n";
+                    return;
+            }
+        }
+    }
 
+    void userManagementMenu() {
+        while (true) {
+            displayHeader("User Management");
+            cout << "1. Add New User\n";
+            cout << "2. Remove User\n";
+            cout << "3. List All Users\n";
+            cout << "4. View User Details\n";
+            cout << "5. Update User Interests\n";
+            cout << "6. Select Current User\n";
+            cout << "7. Back to Main Menu\n";
 
-   
+            int choice = getIntInput("Enter your choice (1-7): ", 1, 7);
+
+            switch (choice) {
+                case 1: {
+                    string name = getStringInput("Enter name: ");
+                    string username = getStringInput("Enter username: ");
+                    string email = getStringInput("Enter email: ");
+
+                    DoublyLinkedList<string> interests;
+                    User newUser(name, username, email, interests);
+                    newUser.addInterests();
+
+                    if (userManager.addUser(newUser)) {
+                        cout << "User added successfully!\n";
+                    }
+                    break;
+                }
+                case 2: {
+                    User* user = selectUser();
+                    if (user) {
+                        userManager.removeUser(user->getUserId());
+                        if (currentUser == user) currentUser = nullptr;
+                    }
+                    break;
+                }
+                case 3:
+                    userManager.listAllUsers();
+                    break;
+                case 4: {
+                    User* user = selectUser();
+                    if (user) {
+                        user->displayUserDetails();
+                    }
+                    break;
+                }
+                case 5: {
+                    User* user = selectUser();
+                    if (user) {
+                        user->updateInterests();
+                    }
+                    break;
+                }
+                case 6: {
+                    currentUser = selectUser();
+                    if (currentUser) {
+                        cout << "Current user set to: " << currentUser->getUserName() << "\n";
+                    }
+                    break;
+                }
+                case 7:
+                    return;
+            }
+        }
+    }
+
+    void connectionsManagementMenu() {
+        while (true) {
+            displayHeader("Connections Management");
+            cout << "1. Add Connection\n";
+            cout << "2. Remove Connection\n";
+            cout << "3. View All Connections\n";
+            cout << "4. View User's Connections\n";
+            cout << "5. View Mutual Connections\n";
+            cout << "6. Back to Main Menu\n";
+
+            int choice = getIntInput("Enter your choice (1-6): ", 1, 6);
+
+            switch (choice) {
+                case 1: {
+                    cout << "Select first user:\n";
+                    User* user1 = selectUser();
+                    if (!user1) break;
+
+                    cout << "Select second user:\n";
+                    User* user2 = selectUser();
+                    if (!user2) break;
+
+                    connectionManager.addConnection(user1->getUserId(), user2->getUserId());
+                    break;
+                }
+                case 2: {
+                    cout << "Select first user:\n";
+                    User* user1 = selectUser();
+                    if (!user1) break;
+
+                    cout << "Select second user:\n";
+                    User* user2 = selectUser();
+                    if (!user2) break;
+
+                    connectionManager.removeConnection(user1->getUserId(), user2->getUserId());
+                    break;
+                }
+                case 3:
+                    connectionManager.displayConnections();
+                    break;
+                case 4: {
+                    User* user = selectUser();
+                    if (user) {
+                        vector<int> connections = connectionManager.getConnectionsByUser(user->getUserId());
+                        cout << "Connections for " << user->getUserName() << ":\n";
+                        for (int connId : connections) {
+                            User* connUser = userManager.getUserById(connId);
+                            if (connUser) {
+                                cout << "- " << connUser->getUserName() << " (ID: " << connId << ")\n";
+                            }
+                        }
+                    }
+                    break;
+                }
+                case 5: {
+                    User* user = selectUser();
+                    if (user) {
+                        vector<int> mutualConnections = connectionManager.getMutualConnections(user->getUserId());
+                        cout << "Mutual Connections for " << user->getUserName() << ":\n";
+                        for (int connId : mutualConnections) {
+                            User* connUser = userManager.getUserById(connId);
+                            if (connUser) {
+                                cout << "- " << connUser->getUserName() << " (ID: " << connId << ")\n";
+                            }
+                        }
+                    }
+                    break;
+                }
+                case 6:
+                    return;
+            }
+        }
+    }
+
+    void postManagementMenu() {
+        while (true) {
+            displayHeader("Post Management");
+            cout << "1. Create New Post\n";
+            cout << "2. Remove Post\n";
+            cout << "3. View User's Posts\n";
+            cout << "4. Back to Main Menu\n";
+
+            int choice = getIntInput("Enter your choice (1-4): ", 1, 4);
+
+            switch (choice) {
+                case 1: {
+                    if (!currentUser) {
+                        cout << "Please select a current user first.\n";
+                        break;
+                    }
+
+                    string content = getStringInput("Enter post content: ");
+                    string type = getStringInput("Enter post type: ");
+                    int importance = getIntInput("Enter importance (1-10): ", 1, 10);
+
+                    Post newPost(content, type, importance);
+
+                    // Add tags
+                    char addMoreTags;
+                    do {
+                        string tag = getStringInput("Enter a tag for the post: ");
+                        newPost.addTag(tag);
+
+                        cout << "Add another tag? (y/n): ";
+                        cin >> addMoreTags;
+                        clearInputBuffer();
+                    } while (tolower(addMoreTags) == 'y');
+
+                    currentUser->addPost(newPost);
+                    cout << "Post added successfully!\n";
+                    break;
+                }
+                case 2: {
+                    User* user = currentUser ? currentUser : selectUser();
+                    if (user) {
+                        user->removePost();
+                    }
+                    break;
+                }
+                case 3: {
+                    User* user = currentUser ? currentUser : selectUser();
+                    if (user) {
+                        user->displayPosts();
+                    }
+                    break;
+                }
+                case 4:
+                    return;
+            }
+        }
+    }
+
+    void feedGenerationMenu() {
+        while (true) {
+            displayHeader("Feed Generation");
+            cout << "1. Generate Feed for Current User\n";
+            cout << "2. Generate Feed for Specific User\n";
+            cout << "3. Back to Main Menu\n";
+
+            int choice = getIntInput("Enter your choice (1-3): ", 1, 3);
+
+            switch (choice) {
+                case 1: {
+                    if (!currentUser) {
+                        cout << "Please select a current user first.\n";
+                        break;
+                    }
+                    auto feed = feedGenerator.generateFeed(currentUser->getUserId());
+                    displayFeed(feed);
+                    break;
+                }
+                case 2: {
+                    User* user = selectUser();
+                    if (user) {
+                        auto feed = feedGenerator.generateFeed(user->getUserId());
+                        displayFeed(feed);
+                    }
+                    break;
+                }
+                case 3:
+                    return;
+            }
+        }
+    }
+
+    void fileOperationsMenu() {
+        while (true) {
+            displayHeader("File Operations");
+            cout << "1. Load Sample Users\n";
+            cout << "2. Load Sample Posts\n";
+            cout << "3. Load Sample Connections\n";
+            cout << "4. Save Users\n";
+            cout << "5. Save Posts\n";
+            cout << "6. Save Connections\n";
+            cout << "7. Back to Main Menu\n";
+
+            int choice = getIntInput("Enter your choice (1-7): ", 1, 7);
+
+            switch (choice) {
+                case 1: {
+                    string filename = getStringInput("Enter users file name: ");
+                    fileHandler.loadSampleUsers(filename);
+                    break;
+                }
+                case 2: {
+                    string filename = getStringInput("Enter posts file name: ");
+                    fileHandler.loadSamplePosts(filename);
+                    break;
+                }
+                case 3: {
+                    string filename = getStringInput("Enter connections file name: ");
+                    fileHandler.loadSampleConnections(filename);
+                    break;
+                }
+                case 4: {
+                    string filename = getStringInput("Enter filename to save users: ");
+                    fileHandler.saveUsers(filename);
+                    break;
+                }
+                case 5: {
+                    string filename = getStringInput("Enter filename to save posts: ");
+                    fileHandler.savePosts(filename);
+                    break;
+                }
+                case 6: {
+                    string filename = getStringInput("Enter filename to save connections: ");
+                    fileHandler.saveConnections(filename);
+                    break;
+                }
+                case 7:
+                    return;
+            }
+        }
+    }
+
+    void userAnalyticsMenu() {
+        while (true) {
+            displayHeader("User Analytics");
+            cout << "1. View Most Active Users\n";
+            cout << "2. View Most Influential User\n";
+            cout << "3. View Number of Isolated Users\n";
+            cout << "4. Back to Main Menu\n";
+
+            int choice = getIntInput("Enter your choice (1-4): ", 1, 4);
+
+            switch (choice) {
+                case 1: {
+                    vector<User> activeUsers = userAnalytics.getMostActiveUsers();
+                    cout << "\nMost Active Users (5+ posts):\n";
+                    for ( auto& user : activeUsers) {
+                        cout << "- " << user.getUserName()
+                                << " (Posts: " << user.getPostCount() << ")\n";
+                    }
+                    break;
+                }
+                case 2: {
+                    User influentialUser = userAnalytics.getInfluentialUser();
+                    cout << "\nMost Influential User: " << influentialUser.getUserName() << "\n";
+                    break;
+                }
+                case 3: {
+                    int isolatedUsersCount = userAnalytics.getIsolatedUserCount();
+                    cout << "\nNumber of Isolated Users: " << isolatedUsersCount << "\n";
+                    break;
+                }
+                case 4:
+                    return;
+            }
+        }
+    }
+};
+
+int main() {
+    SocialMediaApp app;
+    app.run();
     return 0;
 }
-
-// To run
-
-// del *.obj  # Windows
-// g++ -o SocialMediaSimulator main.cpp UserManager.cpp User.cpp AllInterests.cpp 
-// ./SocialMediaSimulator

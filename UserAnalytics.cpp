@@ -10,8 +10,8 @@
 using namespace std ;
 
 // Function to get the most active users
-std::pmr::vector<User> UserAnalytics::getMostActiveUsers() {
-        std::pmr::vector<User> mostActiveUsers;
+std::vector<User> UserAnalytics::getMostActiveUsers() {
+        std::vector<User> mostActiveUsers;
 
         for (const auto& pair : UserManager::userById) {
                 User user = pair.second;
@@ -23,7 +23,7 @@ std::pmr::vector<User> UserAnalytics::getMostActiveUsers() {
 }
 
 // Function to get the most followed users
-User UserAnalytics::getInfluentialUsers() {
+User UserAnalytics::getInfluentialUser() {
         User influentialUser;
         ConnectionsManager connectionsManager ;
         int maxFollowers = 0;

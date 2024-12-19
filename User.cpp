@@ -21,7 +21,6 @@ User::User(string name, string username ,string email, DoublyLinkedList<string> 
     this->email = email;
     this->userId = userCounter++;
     this->interests = interests;
-
 }
 
 // Setters
@@ -168,6 +167,11 @@ void User::removePost() {
 void User::displayPosts() {
     postList.displayAllPosts();  
 }
+
+int User::getPostCount() {
+    return postList.getNumberOfPosts();
+}
+
 
 PostLinkedList& User::getPostList()  {
     return postList;
