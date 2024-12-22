@@ -33,7 +33,7 @@ public:
     string getname();
     string getUserName();
     string getUserEmail();
-    DoublyLinkedList<string> getUserInterests();
+    DoublyLinkedList<string> getUserInterests() const;
     DoublyLinkedList<int> getUserConnections();
 
     // Methods for interests
@@ -52,7 +52,7 @@ public:
     void displayPosts();
     int getPostCount();
 
-    PostLinkedList& getPostList();  
+    PostLinkedList& getPostList();
     
 };
 

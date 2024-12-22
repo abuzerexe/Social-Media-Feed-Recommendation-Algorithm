@@ -14,6 +14,7 @@ public:
 
         Node(T value);
     };
+
     Node* head;
     Node* tail;
     DoublyLinkedList();
@@ -24,12 +25,12 @@ public:
     void pushBack(T value);
     void popFront();
     void popBack();
-    void displayForward();
-    void displayBackward();
-    bool isEmpty();
-    bool contains(T value);
-    int size();
-    Node* find(T value);
+    void displayForward() const;
+    void displayBackward() const;
+    bool isEmpty() const;
+    bool contains(T value) const;
+    int size() const;
+    Node* find(T value) const;
     void insertAt(int index, T value);
     void deleteByValue(T value);
 

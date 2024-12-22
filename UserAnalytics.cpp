@@ -7,19 +7,33 @@
 #include <vector>
 #include "ConnectionsManager.h"
 #include <iostream>
+#include <queue>
+
+#include "PriorityQueue.h"
 using namespace std ;
 
-// Function to get the most active users
 std::vector<User> UserAnalytics::getMostActiveUsers() {
         std::vector<User> mostActiveUsers;
+        PriorityQueue pq;
+
+
+        if (UserManager::userById.empty()) {
+                cout << "No users found.\n";
+                return mostActiveUsers;
+        }
 
         for (const auto& pair : UserManager::userById) {
                 User user = pair.second;
-                if ( user.getPostList().getNumberOfPosts() >= 5 ) {
-                        mostActiveUsers.push_back(user);
-                }
+                pq.enqueueUser(user); ;
         }
-        return mostActiveUsers ;
+
+        int count = 0;
+        while (!pq.isEmpty() && count < 5) {
+                mostActiveUsers.push_back(pq.dequeueUser());
+                count++;
+        }
+
+        return mostActiveUsers;
 }
 
 // Function to get the most followed users

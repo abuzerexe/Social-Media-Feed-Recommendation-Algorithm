@@ -13,8 +13,8 @@ bool UserManager::addUser(User& user){
     }
 
     
-   userById[user.getUserId()] = user;
-   userByUserName[user.getUserName()] = user.getUserId();
+    userById[user.getUserId()] = user;
+    userByUserName[user.getUserName()] = user.getUserId();
 
 
     return true;
@@ -74,22 +74,22 @@ User* UserManager::getUserByUsername(string username){
     }
     
 }
-
-void UserManager::listAllUsers(){
-
-    if (userById.empty())
-    {
-        cout << "All Users: \n" << endl;
+void UserManager::listAllUsers() {
+    if (userById.empty()) {
+        cout << "No users found.\n" << endl;
         return;
     }
 
+    cout << "All Users: \n" << endl;
+    for (const auto& pair : userById) {
+        try {
+            User user = pair.second;
+            user.displayUserDetails();
 
-
-    for (auto &pair : userById)
-    {
-        pair.second.displayUserDetails();
+        } catch (const std::exception& e) {
+            std::cerr << "Error displaying user details: " << e.what() << std::endl;
+        }
     }
-
 }
 
 bool UserManager::userExistsByUsername(string username){

@@ -67,7 +67,7 @@ string User::getUserEmail() {
     return email;
 }
 
-DoublyLinkedList<string> User::getUserInterests() {
+DoublyLinkedList<string> User::getUserInterests() const{
     return interests;
 }
 
@@ -148,6 +148,7 @@ void User::updateInterests() {
 
 
 void User::displayUserDetails() {
+
     cout << "\n========================================\n";
     cout << "           User Details\n";
     cout << "========================================\n";
@@ -160,6 +161,7 @@ void User::displayUserDetails() {
     interests.displayForward();
     cout << "========================================\n";
 }
+
 
 
 void User::displayUserInterests() {
@@ -187,7 +189,7 @@ int User::getPostCount() {
 }
 
 
-PostLinkedList& User::getPostList()  {
+PostLinkedList& User::getPostList(){
     return postList;
 }
 

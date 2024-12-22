@@ -198,6 +198,7 @@ public:
                 case 3:
                     userManager.listAllUsers();
                     break;
+
                 case 4: {
                     User* user = selectUser();
                     if (user) {
@@ -494,6 +495,12 @@ public:
                 case 1: {
                     vector<User> activeUsers = userAnalytics.getMostActiveUsers();
                     cout << "\nMost Active Users (5+ posts):\n";
+
+                    if ( activeUsers.empty() ) {
+                        cout << "No active users found.\n";
+                        break;
+                    }
+
                     for ( auto& user : activeUsers) {
                         cout << "- " << user.getUserName()
                                 << " (Posts: " << user.getPostCount() << ")\n";
