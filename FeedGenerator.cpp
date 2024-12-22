@@ -1,64 +1,48 @@
 #include "FeedGenerator.h"
 #include <algorithm>
-#include <random>
 
 using namespace std;
 
-// Constructor
 FeedGenerator::FeedGenerator(UserManager& um, ConnectionsManager& cm)
     : userManager(um), connectionsManager(cm) {}
 
-// Generate feed for a specific user
 priority_queue<Post> FeedGenerator::generateFeed(int userID) {
-    // Get the user
     User* user = userManager.getUserById(userID);
     if (!user) {
-        cout << "User not found." << endl;
         return priority_queue<Post>();
     }
 
-    // Get user's interests
-    DoublyLinkedList<string> userInterests = user->getUserInterests();
-
-    // Initialize priority queue for feed
+    // First, get posts from direct connections
+    vector<Post> connectionPosts = getConnectionPosts(userID);
     priority_queue<Post> feedQueue;
 
-    // Check if user has connections
-    vector<int> userConnections = connectionsManager.getConnectionsByUser(userID);
+    // Get user interests
+    DoublyLinkedList<string> userInterests = user->getUserInterests();
 
-    if (!userConnections.empty()) {
-        // Get posts from connections
-        vector<Post> connectionPosts = getConnectionPosts(userID);
-
-        // Match connection posts to user's interests
-        feedQueue = matchPostsToInterests(connectionPosts, userInterests);
+    // Process connection posts first (these get priority)
+    for (Post post : connectionPosts) {
+        double score = calculatePostScore(post, userInterests);
+        // Boost score for connection posts
+        post.interestMatchScore = static_cast<int>(score * 150); // 50% boost for connection posts
+        feedQueue.push(post);
     }
 
-    // If feed is empty or not enough posts, get random posts
-    if (feedQueue.empty()) {
-        vector<Post> randomPosts = getRandomPosts();
-
-        // Match random posts to user's interests
-        priority_queue<Post> randomPostQueue = matchPostsToInterests(randomPosts, userInterests);
-
-        // If random posts queue is not empty, use it
-        if (!randomPostQueue.empty()) {
-            feedQueue = randomPostQueue;
-        }
+    // Then process random posts (for discovery)
+    vector<Post> randomPosts = getRandomPosts();
+    for (Post post : randomPosts) {
+        double score = calculatePostScore(post, userInterests);
+        post.interestMatchScore = static_cast<int>(score * 100);
+        feedQueue.push(post);
     }
 
     return feedQueue;
 }
 
-// Helper method to get posts from random users
 vector<Post> FeedGenerator::getRandomPosts() {
     vector<Post> allPosts;
 
-    // Iterate through all users and collect their posts
     for (auto& userPair : userManager.userById) {
         PostLinkedList& userPosts = userPair.second.getPostList();
-
-        // Iterate through user's posts and add to allPosts
         PostLinkedList::Node* current = userPosts.head;
         while (current != nullptr) {
             allPosts.push_back(current->data);
@@ -66,30 +50,21 @@ vector<Post> FeedGenerator::getRandomPosts() {
         }
     }
 
-    // Shuffle the posts randomly
-    random_device rd;
-    mt19937 g(rd());
-    shuffle(allPosts.begin(), allPosts.end(), g);
+    auto rng = std::default_random_engine{std::random_device{}()};
+    shuffle(allPosts.begin(), allPosts.end(), rng);
 
-    // Return a limited number of random posts (e.g., first 20)
     int maxPosts = min(20, static_cast<int>(allPosts.size()));
     return vector<Post>(allPosts.begin(), allPosts.begin() + maxPosts);
 }
 
-// Helper method to get posts from user's connections
 vector<Post> FeedGenerator::getConnectionPosts(int userID) {
     vector<Post> connectionPosts;
-
-    // Get user's connections
     vector<int> userConnections = connectionsManager.getConnectionsByUser(userID);
 
-    // Iterate through connections and collect their posts
     for (int connectionID : userConnections) {
         User* connectionUser = userManager.getUserById(connectionID);
         if (connectionUser) {
             PostLinkedList& userPosts = connectionUser->getPostList();
-
-            // Iterate through user's posts and add to connectionPosts
             PostLinkedList::Node* current = userPosts.head;
             while (current != nullptr) {
                 connectionPosts.push_back(current->data);
@@ -101,32 +76,53 @@ vector<Post> FeedGenerator::getConnectionPosts(int userID) {
     return connectionPosts;
 }
 
-// Helper method to match posts to user's interests
 priority_queue<Post> FeedGenerator::matchPostsToInterests(
     const vector<Post>& posts,
     const DoublyLinkedList<string>& userInterests
 ) {
     priority_queue<Post> matchedPosts;
 
-    for (const Post& post : posts) {
-        int interestScore = 0;
+    for (Post post : posts) {
+        int matchScore = 0;
 
-        // Check each of the user's interests against the post's tags
-        DoublyLinkedList<string>::Node* interestNode = userInterests.head;
-        while (interestNode != nullptr) {
-            if (find(post.tags.begin(), post.tags.end(), interestNode->data) != post.tags.end()) {
-                interestScore++;
+        DoublyLinkedList<string>::Node* current = userInterests.head;
+        while (current != nullptr) {
+            if (find(post.tags.begin(), post.tags.end(), current->data) != post.tags.end()) {
+                matchScore++;
             }
-            interestNode = interestNode->next;
+            current = current->next;
         }
 
-        // If post matches any interests, add to priority queue with score
-        if (interestScore > 0) {
-            Post scoredPost = post;
-            scoredPost.interestMatchScore = interestScore;
-            matchedPosts.push(scoredPost);
+        if (matchScore > 0) {
+            post.interestMatchScore = matchScore;
+            matchedPosts.push(post);
         }
     }
 
     return matchedPosts;
+}
+
+double FeedGenerator::calculatePostScore(const Post& post, const DoublyLinkedList<string>& userInterests) {
+    double interestScore = calculateInterestScore(post, userInterests);
+    double normalizedImportance = static_cast<double>(post.getImportance()) / 10.0;
+
+    // Combine scores with weights
+    return (interestScore * INTEREST_WEIGHT) +
+           (normalizedImportance * IMPORTANCE_WEIGHT);
+}
+
+double FeedGenerator::calculateInterestScore(const Post& post, const DoublyLinkedList<string>& userInterests) {
+    int matchCount = 0;
+    int totalInterests = 0;
+
+    DoublyLinkedList<string>::Node* current = userInterests.head;
+    while (current != nullptr) {
+        totalInterests++;
+        if (find(post.tags.begin(), post.tags.end(), current->data) != post.tags.end()) {
+            matchCount++;
+        }
+        current = current->next;
+    }
+
+    return totalInterests > 0 ? static_cast<double>(matchCount) / totalInterests : 0.0;
 }
