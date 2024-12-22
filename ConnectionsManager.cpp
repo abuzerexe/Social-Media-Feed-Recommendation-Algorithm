@@ -82,19 +82,30 @@ bool ConnectionsManager::areConnected(int userID1, int userID2) {
     return false;
 }
 
-// Get all connections for a user
 vector<int> ConnectionsManager::getConnectionsByUser(int userId) {
     if (userId < 0) {
         throw invalid_argument("Invalid user ID");
     }
 
+    cout << "Getting connections for user ID: " << userId << endl;
+
+    if (connections.isEmpty()) {
+        cout << "No connections exist in the network." << endl;
+        return {};
+    }
+
     set<int> userConnectionsSet;
     for (const auto& connection : connections) {
+        cout << "Checking connection: (" << connection.first << ", " << connection.second << ")" << endl;
         if (connection.first == userId) {
             userConnectionsSet.insert(connection.second);
         } else if (connection.second == userId) {
             userConnectionsSet.insert(connection.first);
         }
+    }
+
+    if (userConnectionsSet.empty()) {
+        cout << "No connections found for user ID: " << userId << endl;
     }
 
     return vector<int>(userConnectionsSet.begin(), userConnectionsSet.end());

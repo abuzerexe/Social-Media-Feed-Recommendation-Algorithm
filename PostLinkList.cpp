@@ -2,12 +2,9 @@
 #include <iostream>
 #include <stdexcept>
 
-PostLinkedList::PostLinkedList() : head(nullptr), tail(nullptr) {}
+PostLinkedList::PostLinkedList() : head(nullptr), tail(nullptr) , size(0) {}
 
 PostLinkedList::~PostLinkedList() {
-    while (!isEmpty()) {
-        remove();
-    }
 }
 
 bool PostLinkedList::isEmpty() const {

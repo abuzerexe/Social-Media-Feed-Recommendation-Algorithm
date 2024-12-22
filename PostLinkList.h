@@ -7,8 +7,6 @@
 
 // PostLinkedList class definition
 class PostLinkedList {
-private:
-    int size ;
 
 public:
     class Node {
@@ -22,6 +20,7 @@ public:
     };
     Node* head;
     Node* tail;
+    int size;
     // Constructor
     PostLinkedList();
 
@@ -44,6 +43,8 @@ public:
     void displayAllPosts() const;
 
     int getNumberOfPosts() const;
+
+
 
 };
 

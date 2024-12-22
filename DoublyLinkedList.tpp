@@ -79,7 +79,7 @@ void DoublyLinkedList<T>::popBack() {
 }
 
 template <typename T>
-void DoublyLinkedList<T>::displayForward() {
+void DoublyLinkedList<T>::displayForward() const {
     Node* current = head;
     while (current != nullptr) {
         cout << current->data << " ";
@@ -89,7 +89,7 @@ void DoublyLinkedList<T>::displayForward() {
 }
 
 template <typename T>
-void DoublyLinkedList<T>::displayBackward() {
+void DoublyLinkedList<T>::displayBackward() const {
     Node* current = tail;
     while (current != nullptr) {
         cout << current->data << " ";
@@ -99,12 +99,12 @@ void DoublyLinkedList<T>::displayBackward() {
 }
 
 template <typename T>
-bool DoublyLinkedList<T>::isEmpty() {
+bool DoublyLinkedList<T>::isEmpty() const{
     return head == nullptr;
 }
 
 template <typename T>
-bool DoublyLinkedList<T>::contains(T value) {
+bool DoublyLinkedList<T>::contains(T value) const{
  
  Node * current = head;
     while (current != nullptr)
@@ -121,7 +121,7 @@ bool DoublyLinkedList<T>::contains(T value) {
 }
 
 template <typename T>
-int DoublyLinkedList<T>::size() {
+int DoublyLinkedList<T>::size() const{
     int count = 0;
     Node* current = head;
     while (current != nullptr) {
@@ -132,7 +132,7 @@ int DoublyLinkedList<T>::size() {
 }
 
 template <typename T>
-typename DoublyLinkedList<T>::Node* DoublyLinkedList<T>::find(T value) {
+typename DoublyLinkedList<T>::Node* DoublyLinkedList<T>::find(T value) const {
     Node* current = head;
     while (current != nullptr) {
         if (current->data == value)

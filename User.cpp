@@ -66,7 +66,7 @@ string User::getUserEmail() {
     return email;
 }
 
-DoublyLinkedList<string> User::getUserInterests() {
+DoublyLinkedList<string> User::getUserInterests() const{
     return interests;
 }
 
@@ -147,13 +147,22 @@ void User::updateInterests() {
 
 
 void User::displayUserDetails() {
-    cout << "User ID: " << getUserId() << endl;
-    cout << "Name: " << getname() << endl;
-    cout << "Username: " << getUserName() << endl;
-    cout << "Email: " << getUserEmail() << endl;
-    cout << "Interests: " << endl;
-    interests.displayForward();
+        try {
+            std::cout << "User ID: " << getUserId() << std::endl;
+            std::cout << "Name: " << getname() << std::endl;
+            std::cout << "Username: " << getUserName() << std::endl;
+            std::cout << "Email: " << getUserEmail() << std::endl;
+            std::cout << "Interests: " << std::endl;
+            interests.displayForward();
+
+        } catch (const std::bad_alloc& e) {
+            std::cerr << "Caught bad_alloc in displayUserDetails: " << e.what() << std::endl;
+
+        } catch (const std::exception& e) {
+            std::cerr << "Caught exception in displayUserDetails: " << e.what() << std::endl;
+        }
 }
+
 
 
 void User::displayUserInterests() {
@@ -181,7 +190,7 @@ int User::getPostCount() {
 }
 
 
-PostLinkedList& User::getPostList()  {
+PostLinkedList& User::getPostList(){
     return postList;
 }
 
