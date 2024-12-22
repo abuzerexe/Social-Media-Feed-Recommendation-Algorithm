@@ -31,7 +31,13 @@ private:
     }
 
     void displayHeader(const string& title) {
-        cout << "\n===== " << title << " =====\n";
+        cout << "\n========================================\n";
+        cout << "           " << title << "\n";
+        cout << "========================================\n";
+    }
+
+    void displayMenuOption(const string& option, const string& description) {
+        cout << setw(2) << option << "  |  " << description << "\n";
     }
 
     int getIntInput(const string& prompt, int min = 1, int max = INT_MAX) {
@@ -75,10 +81,11 @@ private:
 
         return selectedUser;
     }
-
     void displayFeed(priority_queue<Post> feed, int postsPerPage = 5) {
         if (feed.empty()) {
-            cout << "No posts in feed.\n";
+            cout << "\n========================================\n";
+            cout << "           No Posts in Feed\n";
+            cout << "========================================\n";
             return;
         }
 
@@ -88,34 +95,39 @@ private:
         int totalPages = (totalPosts + postsPerPage - 1) / postsPerPage;
 
         while (!feed.empty()) {
-            displayHeader("Feed Page " + to_string(currentPage) + "/" + to_string(totalPages));
+            cout << "\n========================================\n";
+            cout << "           Feed Page " << currentPage << " / " << totalPages << "\n";
+            cout << "========================================\n";
 
             for (int i = 0; i < postsPerPage && !feed.empty(); ++i) {
                 Post post = feed.top();
                 feed.pop();
 
-                cout << "\nPost " << ++currentPost << " of " << totalPosts << "\n";
+                cout << "\n----------------------------------------\n";
+                cout << "Post " << ++currentPost << " of " << totalPosts << "\n";
+                cout << "----------------------------------------\n";
                 cout << "Interest Match Score: " << post.interestMatchScore << "\n";
+                cout << "----------------------------------------\n";
                 post.displayPostDetails();
-                cout << "------------------------\n";
+                cout << "----------------------------------------\n";
             }
 
             if (!feed.empty()) {
-                cout << "\nPress Enter to see next page...";
+                cout << "\nPress Enter to see the next page...";
                 cin.get();
                 currentPage++;
             }
         }
+
+        cout << "\n========================================\n";
+        cout << "           End of Feed\n";
+        cout << "========================================\n";
     }
 
 public:
     SocialMediaApp()
-        : userManager(),
-          connectionManager(),
-          postManagement(userManager),
-          feedGenerator(userManager, connectionManager),
-          fileHandler(userManager, connectionManager),
-          currentUser(nullptr) {}
+        : userManager(), connectionManager(), postManagement(userManager), feedGenerator(userManager, connectionManager),
+          fileHandler(userManager, connectionManager), currentUser(nullptr) {}
 
     void run() {
         while (true) {
@@ -123,13 +135,13 @@ public:
             if (currentUser) {
                 cout << "Current User: " << currentUser->getUserName() << " (ID: " << currentUser->getUserId() << ")\n\n";
             }
-            cout << "1. User Management\n";
-            cout << "2. Connections Management\n";
-            cout << "3. Post Management\n";
-            cout << "4. Feed Generation\n";
-            cout << "5. File Operations\n";
-            cout << "6. User Analytics\n";
-            cout << "7. Exit\n";
+            displayMenuOption("1", "User Management");
+            displayMenuOption("2", "Connections Management");
+            displayMenuOption("3", "Post Management");
+            displayMenuOption("4", "Feed Generation");
+            displayMenuOption("5", "File Operations");
+            displayMenuOption("6", "User Analytics");
+            displayMenuOption("7", "Exit");
 
             int choice = getIntInput("Enter your choice (1-7): ", 1, 7);
 
@@ -150,13 +162,13 @@ public:
     void userManagementMenu() {
         while (true) {
             displayHeader("User Management");
-            cout << "1. Add New User\n";
-            cout << "2. Remove User\n";
-            cout << "3. List All Users\n";
-            cout << "4. View User Details\n";
-            cout << "5. Update User Interests\n";
-            cout << "6. Select Current User\n";
-            cout << "7. Back to Main Menu\n";
+            displayMenuOption("1", "Add New User");
+            displayMenuOption("2", "Remove User");
+            displayMenuOption("3", "List All Users");
+            displayMenuOption("4", "View User Details");
+            displayMenuOption("5", "Update User Interests");
+            displayMenuOption("6", "Select Current User");
+            displayMenuOption("7", "Back to Main Menu");
 
             int choice = getIntInput("Enter your choice (1-7): ", 1, 7);
 
@@ -214,147 +226,147 @@ public:
     }
 
     void connectionsManagementMenu() {
-    while (true) {
-        displayHeader("Connections Management");
-        cout << "1. Add Connection\n";
-        cout << "2. Remove Connection\n";
-        cout << "3. View All Connections\n";
-        cout << "4. View User's Connections\n";
-        cout << "5. View Mutual Connections\n";
-        cout << "6. Back to Main Menu\n";
+        while (true) {
+            displayHeader("Connections Management");
+            displayMenuOption("1", "Add Connection");
+            displayMenuOption("2", "Remove Connection");
+            displayMenuOption("3", "View All Connections");
+            displayMenuOption("4", "View User's Connections");
+            displayMenuOption("5", "View Mutual Connections");
+            displayMenuOption("6", "Back to Main Menu");
 
-        int choice = getIntInput("Enter your choice (1-6): ", 1, 6);
+            int choice = getIntInput("Enter your choice (1-6): ", 1, 6);
 
-        switch (choice) {
-            case 1: {
-                try {
-                    cout << "Select first user:\n";
-                    User* user1 = selectUser();
-                    if (!user1) break;
+            switch (choice) {
+                case 1: {
+                    try {
+                        cout << "Select first user:\n";
+                        User* user1 = selectUser();
+                        if (!user1) break;
 
-                    cout << "Select second user:\n";
-                    User* user2 = selectUser();
-                    if (!user2) break;
+                        cout << "Select second user:\n";
+                        User* user2 = selectUser();
+                        if (!user2) break;
 
-                    connectionManager.addConnection(user1->getUserId(), user2->getUserId());
-                    cout << "Connection added successfully!\n";
-                } catch (const invalid_argument& e) {
-                    cout << "Error: " << e.what() << "\n";
-                } catch (const runtime_error& e) {
-                    cout << "Error: " << e.what() << "\n";
-                } catch (const exception& e) {
-                    cout << "Unexpected error: " << e.what() << "\n";
-                }
-                break;
-            }
-            case 2: {
-                try {
-                    cout << "Select first user:\n";
-                    User* user1 = selectUser();
-                    if (!user1) break;
-
-                    cout << "Select second user:\n";
-                    User* user2 = selectUser();
-                    if (!user2) break;
-
-                    connectionManager.removeConnection(user1->getUserId(), user2->getUserId());
-                    cout << "Connection removed successfully!\n";
-                } catch (const invalid_argument& e) {
-                    cout << "Error: " << e.what() << "\n";
-                } catch (const runtime_error& e) {
-                    cout << "Error: " << e.what() << "\n";
-                } catch (const exception& e) {
-                    cout << "Unexpected error: " << e.what() << "\n";
-                }
-                break;
-            }
-            case 3:
-                try {
-                    connectionManager.displayConnections();
-                } catch (const exception& e) {
-                    cout << "Error displaying connections: " << e.what() << "\n";
-                }
-                break;
-            case 4: {
-                try {
-                    User* user = selectUser();
-                    if (user) {
-                        vector<int> connections = connectionManager.getConnectionsByUser(user->getUserId());
-                        cout << "Connections for " << user->getUserName() << ":\n";
-                        if (connections.empty()) {
-                            cout << "No connections found.\n";
-                        } else {
-                            for (int connId : connections) {
-                                User* connUser = userManager.getUserById(connId);
-                                if (connUser) {
-                                    cout << "- " << connUser->getUserName() << " (ID: " << connId << ")\n";
-                                }
-                            }
-                        }
+                        connectionManager.addConnection(user1->getUserId(), user2->getUserId());
+                        cout << "Connection added successfully!\n";
+                    } catch (const invalid_argument& e) {
+                        cout << "Error: " << e.what() << "\n";
+                    } catch (const runtime_error& e) {
+                        cout << "Error: " << e.what() << "\n";
+                    } catch (const exception& e) {
+                        cout << "Unexpected error: " << e.what() << "\n";
                     }
-                } catch (const invalid_argument& e) {
-                    cout << "Error: " << e.what() << "\n";
-                } catch (const exception& e) {
-                    cout << "Unexpected error: " << e.what() << "\n";
+                    break;
                 }
-                break;
-            }
-            case 5: {
-                try {
-                    cout << "Select user to find mutual friend suggestions for:\n";
-                    User* mainUser = selectUser();
-                    if (!mainUser) break;
+                case 2: {
+                    try {
+                        cout << "Select first user:\n";
+                        User* user1 = selectUser();
+                        if (!user1) break;
 
-                    // Get friend suggestions using the new function
-                    map<int,vector<int>> potentialFriends =
-                        connectionManager.getPotentialFriendSuggestions(mainUser->getUserId());
+                        cout << "Select second user:\n";
+                        User* user2 = selectUser();
+                        if (!user2) break;
 
-                    // Display results
-                    cout << "\nPotential Friend Suggestions for " << mainUser->getUserName() << ":\n";
-                    if (potentialFriends.empty()) {
-                        cout << "No friend suggestions found.\n";
-                    } else {
-                        for (const auto& suggestion : potentialFriends) {
-                            User* suggestedUser = userManager.getUserById(suggestion.first);
-                            if (suggestedUser) {
-                                cout << "\n- " << suggestedUser->getUserName()
-                                     << " (ID: " << suggestion.first << ")\n";
-                                cout << "  Mutual friends with: ";
-
-                                // Show through which friends this connection is mutual
-                                bool first = true;
-                                for (int mutualFriendId : suggestion.second) {
-                                    User* mutualFriend = userManager.getUserById(mutualFriendId);
-                                    if (mutualFriend) {
-                                        if (!first) cout << ", ";
-                                        cout << mutualFriend->getUserName();
-                                        first = false;
+                        connectionManager.removeConnection(user1->getUserId(), user2->getUserId());
+                        cout << "Connection removed successfully!\n";
+                    } catch (const invalid_argument& e) {
+                        cout << "Error: " << e.what() << "\n";
+                    } catch (const runtime_error& e) {
+                        cout << "Error: " << e.what() << "\n";
+                    } catch (const exception& e) {
+                        cout << "Unexpected error: " << e.what() << "\n";
+                    }
+                    break;
+                }
+                case 3:
+                    try {
+                        connectionManager.displayConnections();
+                    } catch (const exception& e) {
+                        cout << "Error displaying connections: " << e.what() << "\n";
+                    }
+                    break;
+                case 4: {
+                    try {
+                        User* user = selectUser();
+                        if (user) {
+                            vector<int> connections = connectionManager.getConnectionsByUser(user->getUserId());
+                            cout << "Connections for " << user->getUserName() << ":\n";
+                            if (connections.empty()) {
+                                cout << "No connections found.\n";
+                            } else {
+                                for (int connId : connections) {
+                                    User* connUser = userManager.getUserById(connId);
+                                    if (connUser) {
+                                        cout << "- " << connUser->getUserName() << " (ID: " << connId << ")\n";
                                     }
                                 }
-                                cout << "\n";
                             }
                         }
+                    } catch (const invalid_argument& e) {
+                        cout << "Error: " << e.what() << "\n";
+                    } catch (const exception& e) {
+                        cout << "Unexpected error: " << e.what() << "\n";
                     }
-                } catch (const invalid_argument& e) {
-                    cout << "Error: " << e.what() << "\n";
-                } catch (const exception& e) {
-                    cout << "Unexpected error: " << e.what() << "\n";
+                    break;
                 }
-                break;
+                case 5: {
+                    try {
+                        cout << "Select user to find mutual friend suggestions for:\n";
+                        User* mainUser = selectUser();
+                        if (!mainUser) break;
+
+                        // Get friend suggestions using the new function
+                        map<int,vector<int>> potentialFriends =
+                            connectionManager.getPotentialFriendSuggestions(mainUser->getUserId());
+
+                        // Display results
+                        cout << "\nPotential Friend Suggestions for " << mainUser->getUserName() << ":\n";
+                        if (potentialFriends.empty()) {
+                            cout << "No friend suggestions found.\n";
+                        } else {
+                            for (const auto& suggestion : potentialFriends) {
+                                User* suggestedUser = userManager.getUserById(suggestion.first);
+                                if (suggestedUser) {
+                                    cout << "\n- " << suggestedUser->getUserName()
+                                         << " (ID: " << suggestion.first << ")\n";
+                                    cout << "  Mutual friends with: ";
+
+                                    // Show through which friends this connection is mutual
+                                    bool first = true;
+                                    for (int mutualFriendId : suggestion.second) {
+                                        User* mutualFriend = userManager.getUserById(mutualFriendId);
+                                        if (mutualFriend) {
+                                            if (!first) cout << ", ";
+                                            cout << mutualFriend->getUserName();
+                                            first = false;
+                                        }
+                                    }
+                                    cout << "\n";
+                                }
+                            }
+                        }
+                    } catch (const invalid_argument& e) {
+                        cout << "Error: " << e.what() << "\n";
+                    } catch (const exception& e) {
+                        cout << "Unexpected error: " << e.what() << "\n";
+                    }
+                    break;
+                }
+                case 6:
+                    return;
             }
-            case 6:
-                return;
         }
     }
-}
 
     void postManagementMenu() {
         while (true) {
             displayHeader("Post Management");
-            cout << "1. Create New Post\n";
-            cout << "2. Remove Post\n";
-            cout << "3. View User's Posts\n";
-            cout << "4. Back to Main Menu\n";
+            displayMenuOption("1", "Create New Post");
+            displayMenuOption("2", "Remove Post");
+            displayMenuOption("3", "View User's Posts");
+            displayMenuOption("4", "Back to Main Menu");
 
             int choice = getIntInput("Enter your choice (1-4): ", 1, 4);
 
@@ -409,9 +421,9 @@ public:
     void feedGenerationMenu() {
         while (true) {
             displayHeader("Feed Generation");
-            cout << "1. Generate Feed for Current User\n";
-            cout << "2. Generate Feed for Specific User\n";
-            cout << "3. Back to Main Menu\n";
+            displayMenuOption("1", "Generate Feed for Current User");
+            displayMenuOption("2", "Generate Feed for Specific User");
+            displayMenuOption("3", "Back to Main Menu");
 
             int choice = getIntInput("Enter your choice (1-3): ", 1, 3);
 
@@ -442,10 +454,10 @@ public:
     void fileOperationsMenu() {
         while (true) {
             displayHeader("File Operations");
-            cout << "1. Load Sample Users\n";
-            cout << "2. Load Sample Posts\n";
-            cout << "3. Load Sample Connections\n";
-            cout << "4. Back to Main Menu\n";
+            displayMenuOption("1", "Load Sample Users");
+            displayMenuOption("2", "Load Sample Posts");
+            displayMenuOption("3", "Load Sample Connections");
+            displayMenuOption("4", "Back to Main Menu");
 
             int choice = getIntInput("Enter your choice (1-7): ", 1, 7);
 
@@ -471,10 +483,10 @@ public:
     void userAnalyticsMenu() {
         while (true) {
             displayHeader("User Analytics");
-            cout << "1. View Most Active Users\n";
-            cout << "2. View Most Influential User\n";
-            cout << "3. View Number of Isolated Users\n";
-            cout << "4. Back to Main Menu\n";
+            displayMenuOption("1", "View Most Active Users");
+            displayMenuOption("2", "View Most Influential User");
+            displayMenuOption("3", "View Number of Isolated Users");
+            displayMenuOption("4", "Back to Main Menu");
 
             int choice = getIntInput("Enter your choice (1-4): ", 1, 4);
 
