@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <set>
 #include <stdexcept>
-
+#include <map>
 using namespace std;
 
 // Constructor
@@ -101,26 +101,34 @@ vector<int> ConnectionsManager::getConnectionsByUser(int userId) {
 }
 
 // Get mutual connections
-vector<int> ConnectionsManager::getMutualConnections(int userId) {
+map<int, vector<int>> ConnectionsManager::getPotentialFriendSuggestions(int userId) {
     if (userId < 0) {
         throw invalid_argument("Invalid user ID");
     }
 
+    map<int, vector<int>> potentialFriends;  // potential friend ID -> [mutual friend IDs]
+
+    // Get user's direct connections
     vector<int> userConnections = getConnectionsByUser(userId);
-    set<int> mutualConnectionsSet;
 
-    for (int connectionId : userConnections) {
-        vector<int> secondDegreeConnections = getConnectionsByUser(connectionId);
+    // For each of user's friends, get their friends
+    for (int friendId : userConnections) {
+        vector<int> friendConnections = getConnectionsByUser(friendId);
 
-        for (int secondDegreeId : secondDegreeConnections) {
-            if (secondDegreeId != userId &&
-                find(userConnections.begin(), userConnections.end(), secondDegreeId) != userConnections.end()) {
-                mutualConnectionsSet.insert(secondDegreeId);
-            }
+        // Check each friend-of-friend
+        for (int potentialFriendId : friendConnections) {
+            // Skip if this is the main user or already a direct connection
+            if (potentialFriendId == userId ||
+                find(userConnections.begin(), userConnections.end(), potentialFriendId) != userConnections.end()) {
+                continue;
+                }
+
+            // Add to potential friends map
+            potentialFriends[potentialFriendId].push_back(friendId);
         }
     }
 
-    return vector<int>(mutualConnectionsSet.begin(), mutualConnectionsSet.end());
+    return potentialFriends;
 }
 
 // Get connection count
