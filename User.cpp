@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <iomanip>
 #include "User.h"
 #include "DoublyLinkedList.h"
 #include "AllInterests.h"
@@ -147,20 +148,18 @@ void User::updateInterests() {
 
 
 void User::displayUserDetails() {
-        try {
-            std::cout << "User ID: " << getUserId() << std::endl;
-            std::cout << "Name: " << getname() << std::endl;
-            std::cout << "Username: " << getUserName() << std::endl;
-            std::cout << "Email: " << getUserEmail() << std::endl;
-            std::cout << "Interests: " << std::endl;
-            interests.displayForward();
 
-        } catch (const std::bad_alloc& e) {
-            std::cerr << "Caught bad_alloc in displayUserDetails: " << e.what() << std::endl;
-
-        } catch (const std::exception& e) {
-            std::cerr << "Caught exception in displayUserDetails: " << e.what() << std::endl;
-        }
+    cout << "\n========================================\n";
+    cout << "           User Details\n";
+    cout << "========================================\n";
+    cout << left << setw(15) << "User ID: " << getUserId() << "\n";
+    cout << left << setw(15) << "Name: " << getname() << "\n";
+    cout << left << setw(15) << "Username: " << getUserName() << "\n";
+    cout << left << setw(15) << "Email: " << getUserEmail() << "\n";
+    cout << "----------------------------------------\n";
+    cout << "Interests:\n";
+    interests.displayForward();
+    cout << "========================================\n";
 }
 
 
