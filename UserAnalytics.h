@@ -16,7 +16,7 @@ class UserAnalytics {
 public:
 
     std::vector<User> getMostActiveUsers();
-    User getInfluentialUser();
+    User getInfluentialUser(ConnectionsManager connectionsManager);
     int getIsolatedUserCount(ConnectionsManager connectionsManager); ;
 
 };

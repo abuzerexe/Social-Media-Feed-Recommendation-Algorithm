@@ -427,7 +427,7 @@ public:
                     break;
                 }
                 case 2: {
-                    User influentialUser = userAnalytics.getInfluentialUser();
+                    User influentialUser = userAnalytics.getInfluentialUser(connectionManager);
                     cout << "\nMost Influential User: " << influentialUser.getUserName() << "\n";
                     break;
                 }

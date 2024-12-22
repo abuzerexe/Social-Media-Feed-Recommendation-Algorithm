@@ -23,9 +23,8 @@ std::vector<User> UserAnalytics::getMostActiveUsers() {
 }
 
 // Function to get the most followed users
-User UserAnalytics::getInfluentialUser() {
+User UserAnalytics::getInfluentialUser(ConnectionsManager connectionsManager) {
         User influentialUser;
-        ConnectionsManager connectionsManager ;
         int maxFollowers = 0;
 
         for ( const auto& pair : UserManager::userById ) {
