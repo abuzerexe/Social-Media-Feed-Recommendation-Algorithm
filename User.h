@@ -20,6 +20,7 @@ private:
 public:
      User();
     User(std::string name, std::string username ,std::string email, DoublyLinkedList<std::string> interests);
+    User(int id, const string& name, const string& username, const string& email, const DoublyLinkedList<string>& interests);
 
     // Setters
     void setName(string name);

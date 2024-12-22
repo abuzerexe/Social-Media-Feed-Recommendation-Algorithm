@@ -28,7 +28,8 @@ bool FileHandler::validateConnectionData(const std::vector<std::string>& connect
 }
 
 bool FileHandler::loadSampleUsers(const std::string& filename) {
-    std::ifstream file(filename);
+    string fixedName = "../users.txt";
+    std::ifstream file(fixedName);
     if (!file.is_open()) {
         std::cerr << "Error: Could not open users file " << filename << std::endl;
         return false;
@@ -58,7 +59,9 @@ bool FileHandler::loadSampleUsers(const std::string& filename) {
                 }
 
                 // Create user
-                User user(userData[0], userData[1], userData[2], interests);
+                // Create user
+                int userId = std::stoi(userData[0]);  // Convert string ID to integer
+                User user(userId, userData[1], userData[2], userData[3], interests);  // Add email parameter
                 
                 // Add user to UserManager
                 if (userManager.addUser(user)) {
@@ -83,7 +86,8 @@ bool FileHandler::loadSampleUsers(const std::string& filename) {
 }
 
 bool FileHandler::loadSamplePosts(const std::string& filename) {
-    std::ifstream file(filename);
+    string fixedName = "../posts.txt";
+    std::ifstream file(fixedName);
     if (!file.is_open()) {
         std::cerr << "Error: Could not open posts file " << filename << std::endl;
         return false;
@@ -143,7 +147,8 @@ bool FileHandler::loadSamplePosts(const std::string& filename) {
 }
 
 bool FileHandler::loadSampleConnections(const std::string& filename) {
-    std::ifstream file(filename);
+    string fixedName = "../connections.txt";
+    std::ifstream file(fixedName);
     if (!file.is_open()) {
         std::cerr << "Error: Could not open connections file " << filename << std::endl;
         return false;
@@ -194,90 +199,3 @@ bool FileHandler::loadSampleConnections(const std::string& filename) {
     return successCount > 0;
 }
 
-bool FileHandler::saveUsers(const std::string& filename) {
-    std::ofstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Error: Could not open file for saving users " << filename << std::endl;
-        return false;
-    }
-
-    // Write header
-    file << "Name,Username,Email,Interests\n";
-
-    for (auto& pair : UserManager::userById) {
-        User& user = pair.second;
-        file << user.getname() << ","
-             << user.getUserName() << ","
-             << user.getUserEmail() << ",";
-
-        // Write interests
-        DoublyLinkedList<string> interests = user.getUserInterests();
-        DoublyLinkedList<string>::Node* current = interests.head; // Correct Node type
-        bool first = true;
-        while (current) {
-            if (!first) file << ";";
-            file << current->data;
-            current = current->next;
-            first = false;
-        }
-        file << "\n";
-    }
-
-    std::cout << "Users saved successfully to " << filename << std::endl;
-    return true;
-}
-
-bool FileHandler::savePosts(const std::string& filename) {
-    std::ofstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Error: Could not open file for saving posts " << filename << std::endl;
-        return false;
-    }
-
-    // Write header
-    file << "UserID,Content,Type,Importance,Tags\n";
-
-    for (auto& pair : UserManager::userById) {
-        User& user = pair.second; // Remove const qualifier
-        PostLinkedList& postList = user.getPostList();
-
-        PostLinkedList::Node* current = postList.head; // Correct Node type
-        while (current) {
-            file << user.getUserId() << ","
-                 << current->data.getContent() << ","
-                 << current->data.getType() << ","
-                 << current->data.getImportance() << ",";
-
-            // Write tags
-            const std::vector<std::string>& tags = current->data.tags;
-            for (size_t i = 0; i < tags.size(); ++i) {
-                file << tags[i];
-                if (i < tags.size() - 1) file << ";";
-            }
-            file << "\n";
-
-            current = current->next;
-        }
-    }
-
-    std::cout << "Posts saved successfully to " << filename << std::endl;
-    return true;
-}
-
-bool FileHandler::saveConnections(const std::string& filename) {
-    std::ofstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Error: Could not open file for saving connections " << filename << std::endl;
-        return false;
-    }
-
-    // Write header
-    file << "UserID1,UserID2\n";
-
-    for (const auto& connection : connectionManager.connections) {
-        file << connection.first << "," << connection.second << "\n";
-    }
-
-    std::cout << "Connections saved successfully to " << filename << std::endl;
-    return true;
-}

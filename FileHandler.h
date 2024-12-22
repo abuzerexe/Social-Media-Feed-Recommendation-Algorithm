@@ -24,14 +24,7 @@ public:
     // Load sample connections from a file
     bool loadSampleConnections(const std::string& filename);
 
-    // Save current users to a file
-    bool saveUsers(const std::string& filename);
 
-    // Save current posts to a file
-    bool savePosts(const std::string& filename);
-
-    // Save current connections to a file
-    bool saveConnections(const std::string& filename);
 
 private:
     UserManager& userManager;

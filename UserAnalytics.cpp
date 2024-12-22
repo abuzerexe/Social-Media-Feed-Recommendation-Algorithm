@@ -43,8 +43,7 @@ User UserAnalytics::getInfluentialUser() {
 }
 
 // Function to get the number of isolated users
-int UserAnalytics::getIsolatedUserCount() {
-        ConnectionsManager connectionsManager ;
+int UserAnalytics::getIsolatedUserCount(ConnectionsManager connectionsManager) {
         int isolatedUserCount = 0;
 
         for ( const auto& pair : UserManager::userById ) {

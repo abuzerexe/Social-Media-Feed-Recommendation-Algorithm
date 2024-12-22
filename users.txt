@@ -1,0 +1,11 @@
+# UserID,Name,Username,Email,Interest1,Interest2,...
+1,John Smith,johnsmith,john@email.com,technology,programming,ai,machine_learning,blockchain
+2,Alice Cooper,alicecooper,alice@email.com,art,photography,digital_art,design,creativity
+3,David Chen,davidchen,david@email.com,sports,fitness,nutrition,health,coaching
+4,Sarah Wilson,sarahw,sarah@email.com,writing,literature,poetry,creativity,art
+5,Mike Johnson,mikej,mike@email.com,gaming,vr,technology,programming,streaming
+6,Emma Davis,emmad,emma@email.com,cooking,food,nutrition,health,photography
+7,James Wilson,jamesw,james@email.com,music,audio,technology,digital_art,production
+8,Lisa Chang,lisac,lisa@email.com,wellness,fitness,meditation,health,psychology
+9,Alex Martinez,alexm,alex@email.com,cybersecurity,technology,programming,blockchain,ai
+10,Sophie Taylor,sophiet,sophie@email.com,art,photography,design,digital_art,creativity
