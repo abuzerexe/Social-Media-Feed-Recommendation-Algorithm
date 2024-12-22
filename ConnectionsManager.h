@@ -5,7 +5,7 @@
 #include <vector>
 #include <set>
 #include "DoublyLinkedList.h"
-
+#include <map>
 using namespace std;
 
 class ConnectionsManager {
@@ -20,7 +20,7 @@ public:
 
     // Getters
     vector<int> getConnectionsByUser(int userId);
-    vector<int> getMutualConnections(int userId);
+    map<int, vector<int>> getPotentialFriendSuggestions(int userId);
     int getUserConnectionCount(int userId);
 
     // Utility functions

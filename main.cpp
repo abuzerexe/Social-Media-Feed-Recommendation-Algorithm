@@ -2,6 +2,7 @@
 #include <limits>
 #include <iomanip>
 #include <queue>
+#include <map>
 
 #include "UserManager.h"
 #include "ConnectionsManager.h"
@@ -213,19 +214,20 @@ public:
     }
 
     void connectionsManagementMenu() {
-        while (true) {
-            displayHeader("Connections Management");
-            cout << "1. Add Connection\n";
-            cout << "2. Remove Connection\n";
-            cout << "3. View All Connections\n";
-            cout << "4. View User's Connections\n";
-            cout << "5. View Mutual Connections\n";
-            cout << "6. Back to Main Menu\n";
+    while (true) {
+        displayHeader("Connections Management");
+        cout << "1. Add Connection\n";
+        cout << "2. Remove Connection\n";
+        cout << "3. View All Connections\n";
+        cout << "4. View User's Connections\n";
+        cout << "5. View Mutual Connections\n";
+        cout << "6. Back to Main Menu\n";
 
-            int choice = getIntInput("Enter your choice (1-6): ", 1, 6);
+        int choice = getIntInput("Enter your choice (1-6): ", 1, 6);
 
-            switch (choice) {
-                case 1: {
+        switch (choice) {
+            case 1: {
+                try {
                     cout << "Select first user:\n";
                     User* user1 = selectUser();
                     if (!user1) break;
@@ -235,9 +237,18 @@ public:
                     if (!user2) break;
 
                     connectionManager.addConnection(user1->getUserId(), user2->getUserId());
-                    break;
+                    cout << "Connection added successfully!\n";
+                } catch (const invalid_argument& e) {
+                    cout << "Error: " << e.what() << "\n";
+                } catch (const runtime_error& e) {
+                    cout << "Error: " << e.what() << "\n";
+                } catch (const exception& e) {
+                    cout << "Unexpected error: " << e.what() << "\n";
                 }
-                case 2: {
+                break;
+            }
+            case 2: {
+                try {
                     cout << "Select first user:\n";
                     User* user1 = selectUser();
                     if (!user1) break;
@@ -247,44 +258,95 @@ public:
                     if (!user2) break;
 
                     connectionManager.removeConnection(user1->getUserId(), user2->getUserId());
-                    break;
+                    cout << "Connection removed successfully!\n";
+                } catch (const invalid_argument& e) {
+                    cout << "Error: " << e.what() << "\n";
+                } catch (const runtime_error& e) {
+                    cout << "Error: " << e.what() << "\n";
+                } catch (const exception& e) {
+                    cout << "Unexpected error: " << e.what() << "\n";
                 }
-                case 3:
+                break;
+            }
+            case 3:
+                try {
                     connectionManager.displayConnections();
-                    break;
-                case 4: {
+                } catch (const exception& e) {
+                    cout << "Error displaying connections: " << e.what() << "\n";
+                }
+                break;
+            case 4: {
+                try {
                     User* user = selectUser();
                     if (user) {
                         vector<int> connections = connectionManager.getConnectionsByUser(user->getUserId());
                         cout << "Connections for " << user->getUserName() << ":\n";
-                        for (int connId : connections) {
-                            User* connUser = userManager.getUserById(connId);
-                            if (connUser) {
-                                cout << "- " << connUser->getUserName() << " (ID: " << connId << ")\n";
+                        if (connections.empty()) {
+                            cout << "No connections found.\n";
+                        } else {
+                            for (int connId : connections) {
+                                User* connUser = userManager.getUserById(connId);
+                                if (connUser) {
+                                    cout << "- " << connUser->getUserName() << " (ID: " << connId << ")\n";
+                                }
                             }
                         }
                     }
-                    break;
+                } catch (const invalid_argument& e) {
+                    cout << "Error: " << e.what() << "\n";
+                } catch (const exception& e) {
+                    cout << "Unexpected error: " << e.what() << "\n";
                 }
-                case 5: {
-                    User* user = selectUser();
-                    if (user) {
-                        vector<int> mutualConnections = connectionManager.getMutualConnections(user->getUserId());
-                        cout << "Mutual Connections for " << user->getUserName() << ":\n";
-                        for (int connId : mutualConnections) {
-                            User* connUser = userManager.getUserById(connId);
-                            if (connUser) {
-                                cout << "- " << connUser->getUserName() << " (ID: " << connId << ")\n";
-                            }
-                        }
-                    }
-                    break;
-                }
-                case 6:
-                    return;
+                break;
             }
+            case 5: {
+                try {
+                    cout << "Select user to find mutual friend suggestions for:\n";
+                    User* mainUser = selectUser();
+                    if (!mainUser) break;
+
+                    // Get friend suggestions using the new function
+                    map<int,vector<int>> potentialFriends =
+                        connectionManager.getPotentialFriendSuggestions(mainUser->getUserId());
+
+                    // Display results
+                    cout << "\nPotential Friend Suggestions for " << mainUser->getUserName() << ":\n";
+                    if (potentialFriends.empty()) {
+                        cout << "No friend suggestions found.\n";
+                    } else {
+                        for (const auto& suggestion : potentialFriends) {
+                            User* suggestedUser = userManager.getUserById(suggestion.first);
+                            if (suggestedUser) {
+                                cout << "\n- " << suggestedUser->getUserName()
+                                     << " (ID: " << suggestion.first << ")\n";
+                                cout << "  Mutual friends with: ";
+
+                                // Show through which friends this connection is mutual
+                                bool first = true;
+                                for (int mutualFriendId : suggestion.second) {
+                                    User* mutualFriend = userManager.getUserById(mutualFriendId);
+                                    if (mutualFriend) {
+                                        if (!first) cout << ", ";
+                                        cout << mutualFriend->getUserName();
+                                        first = false;
+                                    }
+                                }
+                                cout << "\n";
+                            }
+                        }
+                    }
+                } catch (const invalid_argument& e) {
+                    cout << "Error: " << e.what() << "\n";
+                } catch (const exception& e) {
+                    cout << "Unexpected error: " << e.what() << "\n";
+                }
+                break;
+            }
+            case 6:
+                return;
         }
     }
+}
 
     void postManagementMenu() {
         while (true) {
