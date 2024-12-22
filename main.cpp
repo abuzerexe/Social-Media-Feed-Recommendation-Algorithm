@@ -432,7 +432,7 @@ public:
                     break;
                 }
                 case 3: {
-                    int isolatedUsersCount = userAnalytics.getIsolatedUserCount();
+                    int isolatedUsersCount = userAnalytics.getIsolatedUserCount(connectionManager);
                     cout << "\nNumber of Isolated Users: " << isolatedUsersCount << "\n";
                     break;
                 }

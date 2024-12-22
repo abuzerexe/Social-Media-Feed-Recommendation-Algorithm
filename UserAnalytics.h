@@ -5,6 +5,8 @@
 #ifndef USERANALYTICS_H
 #define USERANALYTICS_H
 #include <vector>
+
+#include "ConnectionsManager.h"
 #include "User.h"
 using namespace std ;
 
@@ -15,7 +17,7 @@ public:
 
     std::vector<User> getMostActiveUsers();
     User getInfluentialUser();
-    int getIsolatedUserCount() ;
+    int getIsolatedUserCount(ConnectionsManager connectionsManager); ;
 
 };
 

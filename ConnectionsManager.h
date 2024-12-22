@@ -1,25 +1,35 @@
-//
-// Created by Muhammad Abdullah on 12/12/2024.
-//
-
+// ConnectionsManager.h
 #ifndef CONNECTIONSMANAGER_H
 #define CONNECTIONSMANAGER_H
-using namespace std;
+
 #include <vector>
+#include <set>
 #include "DoublyLinkedList.h"
+
+using namespace std;
+
 class ConnectionsManager {
 public:
-    DoublyLinkedList<pair<int, int>> connections;
+    // Constructor
     ConnectionsManager();
+
+    // Core functionality
     void addConnection(int userID1, int userID2);
     bool areConnected(int userID1, int userID2);
     void removeConnection(int userID1, int userID2);
+
+    // Getters
     vector<int> getConnectionsByUser(int userId);
-    void displayConnections();
-    vector<int> getMutualConnections(int userId1);
+    vector<int> getMutualConnections(int userId);
     int getUserConnectionCount(int userId);
+
+    // Utility functions
+    void displayConnections();
+    bool validateUserIds(int userID1, int userID2) const;
+
+private:
+    DoublyLinkedList<pair<int, int>> connections;
+    void sortUserIds(int& id1, int& id2) const;
 };
-
-
 
 #endif //CONNECTIONSMANAGER_H

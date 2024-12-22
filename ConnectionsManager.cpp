@@ -1,91 +1,150 @@
+// ConnectionsManager.cpp
+
 #include "ConnectionsManager.h"
-#include "User.h"
-#include "DoublyLinkedList.h"
+#include <iostream>
+#include <algorithm>
 #include <set>
+#include <stdexcept>
+
 using namespace std;
 
-// Constructor to initialize the connections linked list
+// Constructor
 ConnectionsManager::ConnectionsManager() {
     connections = DoublyLinkedList<pair<int, int>>();
 }
 
-// Function to add a connection between two user IDs
-void ConnectionsManager::addConnection(int userID1, int userID2) {
-    // Check if the connection already exists
-    if (areConnected(userID1, userID2)) {
-        cout << "Connection already exists." << endl;
-        return;
+// Helper method to validate user IDs
+bool ConnectionsManager::validateUserIds(int userID1, int userID2) const {
+    if (userID1 < 0 || userID2 < 0) {
+        return false;
     }
 
-    // Add the connection to the linked list
-    connections.pushBack(make_pair(userID1, userID2));
-    cout << "Connection added successfully." << endl;
+    if (userID1 == userID2) {
+        return false;
+    }
+
+    return true;
 }
 
-// Function to check if a connection exists between two user IDs
+// Helper method for consistent ID ordering
+void ConnectionsManager::sortUserIds(int& id1, int& id2) const {
+    if (id1 > id2) {
+        swap(id1, id2);
+    }
+}
+
+// Add connection with validation
+void ConnectionsManager::addConnection(int userID1, int userID2) {
+    if (!validateUserIds(userID1, userID2)) {
+        throw invalid_argument("Invalid user IDs provided");
+    }
+
+    sortUserIds(userID1, userID2);
+
+    if (areConnected(userID1, userID2)) {
+        throw runtime_error("Connection already exists");
+    }
+
+    connections.pushBack(make_pair(userID1, userID2));
+}
+
+// Remove connection with error handling
+void ConnectionsManager::removeConnection(int userID1, int userID2) {
+    if (!validateUserIds(userID1, userID2)) {
+        throw invalid_argument("Invalid user IDs provided");
+    }
+
+    sortUserIds(userID1, userID2);
+
+    for (const auto& connection : connections) {
+        if (connection.first == userID1 && connection.second == userID2) {
+            connections.deleteByValue(connection);
+            return;
+        }
+    }
+
+    throw runtime_error("Connection not found");
+}
+
+// Check if users are connected
 bool ConnectionsManager::areConnected(int userID1, int userID2) {
-    // Iterate through the connections to find a match
-    for (auto connection : connections) {
-        if ((connection.first == userID1 && connection.second == userID2) ||
-            (connection.first == userID2 && connection.second == userID1)) {
+    if (!validateUserIds(userID1, userID2)) {
+        return false;
+    }
+
+    sortUserIds(userID1, userID2);
+
+    for (const auto& connection : connections) {
+        if (connection.first == userID1 && connection.second == userID2) {
             return true;
         }
     }
     return false;
 }
 
-// Function to remove a connection between two user IDs
-void ConnectionsManager::removeConnection(int userID1, int userID2) {
-    // Check if the connection exists
-    if (areConnected(userID1, userID2)) {
-        // Iterate through the connections to find and remove the match
-        for (auto connection : connections) {
-            if ((connection.first == userID1 && connection.second == userID2) ||
-                (connection.first == userID2 && connection.second == userID1)) {
-                connections.deleteByValue(connection);
-                cout << "Connection removed successfully." << endl;
-                return;
-            }
-        }
-    } else {
-        cout << "Connection not found." << endl;
-    }
-}
-
-// Function to display all connections
-void ConnectionsManager::displayConnections() {
-    cout << "Displaying all connections:" << endl;
-    for (auto connection : connections) {
-        cout << connection.first << " <--> " << connection.second << endl;
-    }
-}
-
-// Function to get all connections for a specific user ID, ensuring no duplicates
+// Get all connections for a user
 vector<int> ConnectionsManager::getConnectionsByUser(int userId) {
-    set<int> userConnectionsSet; // Use a set to ensure no duplicates
-    for (auto connection : connections) {
+    if (userId < 0) {
+        throw invalid_argument("Invalid user ID");
+    }
+
+    set<int> userConnectionsSet;
+    for (const auto& connection : connections) {
         if (connection.first == userId) {
             userConnectionsSet.insert(connection.second);
         } else if (connection.second == userId) {
             userConnectionsSet.insert(connection.first);
         }
     }
-    // Convert the set to a vector and return
+
     return vector<int>(userConnectionsSet.begin(), userConnectionsSet.end());
 }
 
-// Function to display mutual connections for a specific user ID
+// Get mutual connections
 vector<int> ConnectionsManager::getMutualConnections(int userId) {
-    set<int> mutualConnectionsSet; // Use a set to ensure no duplicates
+    if (userId < 0) {
+        throw invalid_argument("Invalid user ID");
+    }
+
     vector<int> userConnections = getConnectionsByUser(userId);
-    for (int connection : userConnections) {
-        vector<int> connectionConnections = getConnectionsByUser(connection);
-        for (int mutualConnection : connectionConnections) {
-            if (mutualConnection != userId && areConnected(userId, mutualConnection)) {
-                mutualConnectionsSet.insert(mutualConnection);
+    set<int> mutualConnectionsSet;
+
+    for (int connectionId : userConnections) {
+        vector<int> secondDegreeConnections = getConnectionsByUser(connectionId);
+
+        for (int secondDegreeId : secondDegreeConnections) {
+            if (secondDegreeId != userId &&
+                find(userConnections.begin(), userConnections.end(), secondDegreeId) != userConnections.end()) {
+                mutualConnectionsSet.insert(secondDegreeId);
             }
         }
     }
-    // Convert the set to a vector and return
+
     return vector<int>(mutualConnectionsSet.begin(), mutualConnectionsSet.end());
+}
+
+// Get connection count
+int ConnectionsManager::getUserConnectionCount(int userId) {
+    if (userId < 0) {
+        throw invalid_argument("Invalid user ID");
+    }
+
+    return getConnectionsByUser(userId).size();
+}
+
+// Display all connections
+void ConnectionsManager::displayConnections()  {
+    if (connections.isEmpty()) {
+        cout << "No connections exist in the network." << endl;
+        return;
+    }
+
+    cout << "\nCurrent Network Connections:" << endl;
+    cout << "-------------------------" << endl;
+
+    for (const auto& connection : connections) {
+        cout << "User " << connection.first
+             << " <--> User " << connection.second << endl;
+    }
+    cout << "-------------------------" << endl;
 }
