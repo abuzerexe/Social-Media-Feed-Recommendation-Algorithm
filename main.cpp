@@ -383,45 +383,24 @@ public:
             cout << "1. Load Sample Users\n";
             cout << "2. Load Sample Posts\n";
             cout << "3. Load Sample Connections\n";
-            cout << "4. Save Users\n";
-            cout << "5. Save Posts\n";
-            cout << "6. Save Connections\n";
-            cout << "7. Back to Main Menu\n";
+            cout << "4. Back to Main Menu\n";
 
             int choice = getIntInput("Enter your choice (1-7): ", 1, 7);
 
             switch (choice) {
                 case 1: {
-                    string filename = getStringInput("Enter users file name: ");
-                    fileHandler.loadSampleUsers(filename);
+                    fileHandler.loadSampleUsers("a");
                     break;
                 }
                 case 2: {
-                    string filename = getStringInput("Enter posts file name: ");
-                    fileHandler.loadSamplePosts(filename);
+                    fileHandler.loadSamplePosts("a");
                     break;
                 }
                 case 3: {
-                    string filename = getStringInput("Enter connections file name: ");
-                    fileHandler.loadSampleConnections(filename);
+                    fileHandler.loadSampleConnections("a");
                     break;
                 }
-                case 4: {
-                    string filename = getStringInput("Enter filename to save users: ");
-                    fileHandler.saveUsers(filename);
-                    break;
-                }
-                case 5: {
-                    string filename = getStringInput("Enter filename to save posts: ");
-                    fileHandler.savePosts(filename);
-                    break;
-                }
-                case 6: {
-                    string filename = getStringInput("Enter filename to save connections: ");
-                    fileHandler.saveConnections(filename);
-                    break;
-                }
-                case 7:
+                case 4:
                     return;
             }
         }

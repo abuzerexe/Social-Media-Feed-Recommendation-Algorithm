@@ -28,7 +28,8 @@ bool FileHandler::validateConnectionData(const std::vector<std::string>& connect
 }
 
 bool FileHandler::loadSampleUsers(const std::string& filename) {
-    std::ifstream file(filename);
+    string fixedName = "../users.txt";
+    std::ifstream file(fixedName);
     if (!file.is_open()) {
         std::cerr << "Error: Could not open users file " << filename << std::endl;
         return false;
@@ -58,7 +59,9 @@ bool FileHandler::loadSampleUsers(const std::string& filename) {
                 }
 
                 // Create user
-                User user(userData[0], userData[1], userData[2], interests);
+                // Create user
+                int userId = std::stoi(userData[0]);  // Convert string ID to integer
+                User user(userId, userData[1], userData[2], userData[3], interests);  // Add email parameter
                 
                 // Add user to UserManager
                 if (userManager.addUser(user)) {
@@ -83,7 +86,8 @@ bool FileHandler::loadSampleUsers(const std::string& filename) {
 }
 
 bool FileHandler::loadSamplePosts(const std::string& filename) {
-    std::ifstream file(filename);
+    string fixedName = "../posts.txt";
+    std::ifstream file(fixedName);
     if (!file.is_open()) {
         std::cerr << "Error: Could not open posts file " << filename << std::endl;
         return false;
@@ -143,7 +147,8 @@ bool FileHandler::loadSamplePosts(const std::string& filename) {
 }
 
 bool FileHandler::loadSampleConnections(const std::string& filename) {
-    std::ifstream file(filename);
+    string fixedName = "../connections.txt";
+    std::ifstream file(fixedName);
     if (!file.is_open()) {
         std::cerr << "Error: Could not open connections file " << filename << std::endl;
         return false;

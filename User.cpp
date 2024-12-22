@@ -22,6 +22,14 @@ User::User(string name, string username ,string email, DoublyLinkedList<string> 
     this->userId = userCounter++;
     this->interests = interests;
 }
+User::User(int id, const std::string& name, const std::string& username, const std::string& email, const DoublyLinkedList<std::string>& interests) {
+    this->userId = id;
+    this->name = name;
+    this->userName = username;
+    this->email = email;
+    this->interests = interests;
+}
+
 
 // Setters
 
