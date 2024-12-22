@@ -82,14 +82,14 @@ void UserManager::listAllUsers(){
         cout << "All Users: \n" << endl;
         return;
     }
-    
+
 
 
     for (auto &pair : userById)
     {
         pair.second.displayUserDetails();
     }
-    
+
 }
 
 bool UserManager::userExistsByUsername(string username){
