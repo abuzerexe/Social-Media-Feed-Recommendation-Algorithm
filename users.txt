@@ -9,3 +9,4 @@
 8,Lisa Chang,lisac,lisa@email.com,wellness,fitness,meditation,health,psychology
 9,Alex Martinez,alexm,alex@email.com,cybersecurity,technology,programming,blockchain,ai
 10,Sophie Taylor,sophiet,sophie@email.com,art,photography,design,digital_art,creativity
+11, Abdul Muizz, muizz, muizz@gmail.com, technology, programming, ai, machine_learning, blockchain
