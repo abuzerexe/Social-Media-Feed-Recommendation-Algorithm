@@ -88,7 +88,6 @@
 9,Network Security Analysis,text,4,cybersecurity,networking,security
 9,Ethical Hacking Tutorial,text,5,cybersecurity,security,programming
 9,Cryptocurrency Security,text,4,blockchain,security,cryptocurrency
-9,Cloud Security Solutions,text,4,cybersecurity,cloud,technology
 10,Art Gallery Opening,image,5,art,event,gallery
 10,Photography Exhibition,image,4,photography,art,exhibition
 10,Digital Design Portfolio,image,5,design,digital_art,portfolio
@@ -99,3 +98,4 @@
 10,Street Photography Series,image,4,photography,art,urban
 10,Digital Art Workshop,video,4,digital_art,tutorial,creativity
 10,Artist Collaboration Project,image,5,art,collaboration,creative
+10, Test Post 1, text, 3, art, collaboration, creative

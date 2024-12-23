@@ -1,6 +1,8 @@
 #include "PostManagement.h"
 #include <iostream>
 
+using namespace std;
+
 PostManagement::PostManagement(UserManager& um) : userManager(um) {}
 
 void PostManagement::addPost(int userID, const Post& post) {
@@ -8,7 +10,7 @@ void PostManagement::addPost(int userID, const Post& post) {
     if (user) {
         user->addPost(post);
     } else {
-        std::cout << "User not found." << std::endl;
+        cout << "User not found." << endl;
     }
 }
 
@@ -17,7 +19,7 @@ void PostManagement::removePost(int userID) {
     if (user) {
         user->removePost();
     } else {
-        std::cout << "User not found." << std::endl;
+        cout << "User not found." << endl;
     }
 }
 
@@ -26,6 +28,6 @@ void PostManagement::displayPosts(int userID) {
     if (user) {
         user->displayPosts();
     } else {
-        std::cout << "User not found." << std::endl;
+        cout << "User not found." << endl;
     }
 }

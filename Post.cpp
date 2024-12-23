@@ -2,6 +2,8 @@
 #include <iostream>
 #include <iomanip>
 
+using namespace std;
+
 Post::Post() : content(""), type(""), importance(0), timestamp(std::time(nullptr)), interestMatchScore(0) {}
 
 Post::Post(const std::string& content, const std::string& type, int importance)
@@ -41,25 +43,25 @@ void Post::addTag(const std::string& tag) {
 }
 
 void Post::displayPostDetails() const {
-    std::cout << "Post Details:" << std::endl;
-    std::cout << "Content: " << content << std::endl;
-    std::cout << "Type: " << type << std::endl;
-    std::cout << "Importance: " << importance << std::endl;
+    cout << "Post Details:" << endl;
+    cout << "Content: " << content << endl;
+    cout << "Type: " << type << endl;
+    cout << "Importance: " << importance << endl;
 
     // Display tags
-    std::cout << "Tags: ";
+    cout << "Tags: ";
     for (const auto& tag : tags) {
-        std::cout << tag << " ";
+        cout << tag << " ";
     }
-    std::cout << std::endl;
+    cout << endl;
 
     // Convert timestamp to readable format
     char buffer[26];
     // ctime_s(buffer, sizeof(buffer), &timestamp);
-    std::cout << "Timestamp: " << buffer;
+    cout << "Timestamp: " << buffer;
 
     // Display interest match score
-    std::cout << "Interest Match Score: " << interestMatchScore << std::endl;
+    cout << "Interest Match Score: " << interestMatchScore << endl;
 }
 
 // Overloaded comparison operators for priority queue

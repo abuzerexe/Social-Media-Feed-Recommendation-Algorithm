@@ -2,7 +2,9 @@
 #include <iostream>
 #include <stdexcept>
 
-PostLinkedList::PostLinkedList() : head(nullptr), tail(nullptr) , size(0) {}
+using namespace std;
+
+PostLinkedList::PostLinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
 PostLinkedList::~PostLinkedList() {
 }
@@ -13,7 +15,7 @@ bool PostLinkedList::isEmpty() const {
 
 void PostLinkedList::add(const Post& post) {
     Node* newNode = new Node(post);
-    
+
     if (isEmpty()) {
         head = tail = newNode;
     } else {
@@ -21,17 +23,17 @@ void PostLinkedList::add(const Post& post) {
         tail->next = newNode;
         tail = newNode;
     }
-    size++ ;
+    size++;
 }
 
 void PostLinkedList::remove() {
     if (isEmpty()) {
-        std::cout << "List is empty. Cannot remove post." << std::endl;
+        cout << "List is empty. Cannot remove post." << endl;
         return;
     }
 
     Node* temp = tail;
-    
+
     if (head == tail) {
         // Only one node
         head = tail = nullptr;
@@ -39,33 +41,33 @@ void PostLinkedList::remove() {
         tail = tail->prev;
         tail->next = nullptr;
     }
-    size-- ;
+    size--;
     delete temp;
 }
 
 Post PostLinkedList::peek() const {
     if (isEmpty()) {
-        throw std::runtime_error("List is empty");
+        throw runtime_error("List is empty");
     }
     return tail->data;
 }
 
 void PostLinkedList::displayAllPosts() const {
     if (isEmpty()) {
-        std::cout << "No posts in the list." << std::endl;
+        cout << "No posts in the list." << endl;
         return;
     }
 
     Node* current = head;
     int postCount = 1;
     while (current != nullptr) {
-        std::cout << "Post " << postCount++ << ":" << std::endl;
+        cout << "Post " << postCount++ << ":" << endl;
         current->data.displayPostDetails();
-        std::cout << std::endl;
+        cout << endl;
         current = current->next;
     }
 }
 
 int PostLinkedList::getNumberOfPosts() const {
-   return size ;
+    return size;
 }

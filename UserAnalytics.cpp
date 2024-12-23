@@ -13,7 +13,7 @@
 using namespace std ;
 
 std::vector<User> UserAnalytics::getMostActiveUsers() {
-        std::vector<User> mostActiveUsers;
+        vector<User> mostActiveUsers;
         PriorityQueue pq;
 
 
