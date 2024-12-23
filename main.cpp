@@ -81,48 +81,83 @@ private:
 
         return selectedUser;
     }
-    void displayFeed(priority_queue<Post> feed, int postsPerPage = 5) {
-        if (feed.empty()) {
-            cout << "\n========================================\n";
-            cout << "           No Posts in Feed\n";
-            cout << "========================================\n";
-            return;
-        }
+void displayFeed(priority_queue<Post> feed, int postsPerPage = 5) {
+    if (feed.empty()) {
+        cout << "\n========================================\n";
+        cout << "           No Posts in Feed\n";
+        cout << "========================================\n";
+        return;
+    }
 
-        int totalPosts = feed.size();
-        int currentPost = 0;
-        int currentPage = 1;
-        int totalPages = (totalPosts + postsPerPage - 1) / postsPerPage;
+    // Convert priority queue to vector to allow bidirectional navigation
+    vector<Post> posts;
+    while (!feed.empty()) {
+        posts.push_back(feed.top());
+        feed.pop();
+    }
 
-        while (!feed.empty()) {
-            cout << "\n========================================\n";
-            cout << "           Feed Page " << currentPage << " / " << totalPages << "\n";
-            cout << "========================================\n";
+    int totalPosts = posts.size();
+    int currentPage = 1;
+    int totalPages = (totalPosts + postsPerPage - 1) / postsPerPage;
 
-            for (int i = 0; i < postsPerPage && !feed.empty(); ++i) {
-                Post post = feed.top();
-                feed.pop();
+    while (true) {
+        // Clear screen for better visualization (optional)
+        system("clear"); // Use "cls" for Windows
 
-                cout << "\n----------------------------------------\n";
-                cout << "Post " << ++currentPost << " of " << totalPosts << "\n";
-                cout << "----------------------------------------\n";
-                cout << "Interest Match Score: " << post.interestMatchScore << "\n";
-                cout << "----------------------------------------\n";
-                post.displayPostDetails();
-                cout << "----------------------------------------\n";
-            }
-
-            if (!feed.empty()) {
-                cout << "\nPress Enter to see the next page...";
-                cin.get();
-                currentPage++;
-            }
-        }
+        // Calculate start and end indices for current page
+        int startIdx = (currentPage - 1) * postsPerPage;
+        int endIdx = min(startIdx + postsPerPage, totalPosts);
 
         cout << "\n========================================\n";
-        cout << "           End of Feed\n";
+        cout << "           Feed Page " << currentPage << " / " << totalPages << "\n";
         cout << "========================================\n";
+
+        // Display posts for current page
+        for (int i = startIdx; i < endIdx; i++) {
+            cout << "\n----------------------------------------\n";
+            cout << "Post " << (i + 1) << " of " << totalPosts << "\n";
+            cout << "----------------------------------------\n";
+            cout << "Interest Match Score: " << posts[i].interestMatchScore << "\n";
+            cout << "----------------------------------------\n";
+            posts[i].displayPostDetails();
+            cout << "----------------------------------------\n";
+        }
+
+        // Display navigation menu
+        cout << "\nNavigation Options:\n";
+        cout << "1. Next Page (Scroll Down)\n";
+        cout << "2. Previous Page (Scroll Up)\n";
+        cout << "3. Exit to Main Menu\n";
+
+        int choice = getIntInput("Enter your choice (1-3): ", 1, 3);
+
+        switch (choice) {
+            case 1: // Next Page
+                if (currentPage < totalPages) {
+                    currentPage++;
+                } else {
+                    cout << "You are already on the last page!\n";
+                    cin.get(); // Wait for user input
+                }
+                break;
+
+            case 2: // Previous Page
+                if (currentPage > 1) {
+                    currentPage--;
+                } else {
+                    cout << "You are already on the first page!\n";
+                    cin.get(); // Wait for user input
+                }
+                break;
+
+            case 3: // Exit
+                cout << "\n========================================\n";
+                cout << "        Returning to Main Menu\n";
+                cout << "========================================\n";
+                return;
+        }
     }
+}
 
 public:
     SocialMediaApp()
