@@ -34,6 +34,7 @@ public:
     // Overloaded comparison operators for priority queue
     bool operator<(const Post& other) const;
     bool operator>(const Post& other) const;
+    bool operator==(const Post& other) const;
 
 private:
     std::string content;

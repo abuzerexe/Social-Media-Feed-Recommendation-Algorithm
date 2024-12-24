@@ -16,23 +16,41 @@ priority_queue<Post> FeedGenerator::generateFeed(int userID) {
     vector<Post> connectionPosts = getConnectionPosts(userID);
     priority_queue<Post> feedQueue;
 
+    // Use a vector to keep track of added posts
+    vector<Post> addedPosts;
+
     // Get user interests
     DoublyLinkedList<string> userInterests = user->getUserInterests();
 
     // Process connection posts first (these get priority)
-    for (Post post : connectionPosts) {
+    for (const Post& post : connectionPosts) {
         double score = calculatePostScore(post, userInterests);
         // Boost score for connection posts
-        post.interestMatchScore = static_cast<int>(score * 150); // 50% boost for connection posts
-        feedQueue.push(post);
+        Post scoredPost = post;
+        scoredPost.interestMatchScore = static_cast<int>(score * 150); // 50% boost for connection posts
+        feedQueue.push(scoredPost);
+        addedPosts.push_back(post);
     }
 
     // Then process random posts (for discovery)
     vector<Post> randomPosts = getRandomPosts();
-    for (Post post : randomPosts) {
-        double score = calculatePostScore(post, userInterests);
-        post.interestMatchScore = static_cast<int>(score * 100);
-        feedQueue.push(post);
+    for (const Post& post : randomPosts) {
+        // Check if post is already added (from connections)
+        bool isDuplicate = false;
+        for (const Post& addedPost : addedPosts) {
+            if (post == addedPost) {
+                isDuplicate = true;
+                break;
+            }
+        }
+
+        if (!isDuplicate) {
+            double score = calculatePostScore(post, userInterests);
+            Post scoredPost = post;
+            scoredPost.interestMatchScore = static_cast<int>(score * 100);
+            feedQueue.push(scoredPost);
+            addedPosts.push_back(post);
+        }
     }
 
     return feedQueue;
@@ -53,7 +71,7 @@ vector<Post> FeedGenerator::getRandomPosts() {
     auto rng = std::default_random_engine{std::random_device{}()};
     shuffle(allPosts.begin(), allPosts.end(), rng);
 
-    int maxPosts = min(20, static_cast<int>(allPosts.size()));
+    int maxPosts = min(50, static_cast<int>(allPosts.size()));
     return vector<Post>(allPosts.begin(), allPosts.begin() + maxPosts);
 }
 

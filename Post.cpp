@@ -81,3 +81,8 @@ bool Post::operator>(const Post& other) const {
     }
     return interestMatchScore > other.interestMatchScore;
 }
+
+bool Post::operator==(const Post& other) const {
+    // Compare based on content and timestamp since these together should be unique
+    return content == other.content && timestamp == other.timestamp;
+}
