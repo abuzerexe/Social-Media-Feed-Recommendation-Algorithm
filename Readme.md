@@ -50,3 +50,11 @@ The project is divided into several classes that handle different aspects of the
 - **FeedGenerator Class**: Creates personalized feeds by ranking posts based on relevance.
 - **Post Management**: Organizes posts and ensures they are properly ranked and displayed in the feed.
 
+## Tech Stack
+
+- **Programming Language**: C++
+- **IDE**: CLion, Visual Studio
+- **Version Control**: Git, GitHub
+- **Build System**: CMake
+
+
