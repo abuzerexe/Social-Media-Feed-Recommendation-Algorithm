@@ -22,3 +22,11 @@ If you have added a GUI to this project, please drop a pull request.
 - **User Analytics**: Track and analyze user activity, identifying the most active users and top influencers.
 
 
+## Functionality
+
+- **User Management**: Handles user registration and updates, ensuring each user has a unique identifier and set of interests.
+- **Feed Generation**: Generates personalized feeds by considering the user’s interests, connections, and interactions.
+- **Connection Management**: Manages the relationships between users and dynamically updates the feed as new connections are made or removed.
+- **Post Creation and Handling**: Users can create and manage posts that will be added to the feed based on their relevance.
+- **User Analytics**: Provides insights into user activity and engagement, identifying influencers and key users.
+
