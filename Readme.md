@@ -57,4 +57,14 @@ The project is divided into several classes that handle different aspects of the
 - **Version Control**: Git, GitHub
 - **Build System**: CMake
 
+## How the Components Work Together
+
+The components work together seamlessly:
+
+1. **User Management**: The `UserManager` creates and manages user profiles stored in hashmaps, ensuring each user has a unique ID and interests.
+2. **Connection Management**: `ConnectionManager` tracks user connections and feeds relevant content based on interactions.
+3. **Feed Generation**: The `FeedGenerator` uses priority queues to rank posts and create personalized user feeds.
+4. **Post Management**: Posts are created and managed via the `Post` and `PostLinkedList` classes to ensure they are accurately displayed in the feed.
+5. **User Analytics**: The `UserAnalytics` class tracks activity trends and identifies top influencers.
+
 
