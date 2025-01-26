@@ -40,3 +40,13 @@ If you have added a GUI to this project, please drop a pull request.
 - **Vector**: Used to store dynamic collections of data such as user interests, post data, and analytics, supporting efficient access and resizing.
 
 
+## Code Explanation
+
+The project is divided into several classes that handle different aspects of the social media feed system:
+
+- **User Class**: Manages individual user profiles and their interests.
+- **UserManager Class**: Handles registration and retrieval of users.
+- **ConnectionManager Class**: Manages connections between users, influencing the feed generation.
+- **FeedGenerator Class**: Creates personalized feeds by ranking posts based on relevance.
+- **Post Management**: Organizes posts and ensures they are properly ranked and displayed in the feed.
+
