@@ -9,7 +9,15 @@ It is a console based project.
 
 If you have added a GUI to this project, please drop a pull request.
 
-
+## Table of Contents
+1. [Features](#features)
+2. [Functionality](#functionality)
+3. [Data Structures Used](#data-structures-used)
+4. [Code Explanation](#code-explanation)
+5. [Tech Stack](#tech-stack)
+6. [How the Components Work Together](#how-the-components-work-together)
+7. [Conclusion](#conclusion)
+8. [Credits](#credits)
 
 ## Features
 
