@@ -84,4 +84,4 @@ This project was developed in collaboration with:
 - **Muhammad Abuzer Zia** [@abuzerexe](https://github.com/abuzerexe)
 - **Muhammad Abdullah** [@taciturn2021](https://github.com/taciturn2021)
 - **Muhammad Siraj** [@muhammadsirajdev](https://github.com/muhammadsirajdev)
-- **Abdul Muizz** [a-muizz28](https://github.com/a-muizz28)
+- **Abdul Muizz** [@a-muizz28](https://github.com/a-muizz28)
