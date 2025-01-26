@@ -30,3 +30,13 @@ If you have added a GUI to this project, please drop a pull request.
 - **Post Creation and Handling**: Users can create and manage posts that will be added to the feed based on their relevance.
 - **User Analytics**: Provides insights into user activity and engagement, identifying influencers and key users.
 
+## Data Structures Used
+
+- **Doubly Linked List Template**: For storing and managing user interests and connections.
+- **Hashmap (unordered_map)**: Used to manage user profiles, ensuring efficient lookup and management.
+- **Priority Queue**: For ranking posts based on their relevance and engagement score.
+- **Custom Linked List for post (PostLinkedList)**: Used to manage posts, ensuring quick addition and deletion operations.
+- **Graph**: For representing and managing user connections, allowing efficient traversal and analysis of social networks.
+- **Vector**: Used to store dynamic collections of data such as user interests, post data, and analytics, supporting efficient access and resizing.
+
+
