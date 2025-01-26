@@ -68,3 +68,12 @@ The components work together seamlessly:
 5. **User Analytics**: The `UserAnalytics` class tracks activity trends and identifies top influencers.
 
 
+
+## Credits
+
+This project was developed in collaboration with:
+
+- **Muhammad Abuzer Zia** [@abuzerexe](https://github.com/abuzerexe)
+- **Muhammad Abdullah** [@taciturn2021](https://github.com/taciturn2021)
+- **Muhammad Siraj** [@muhammadsirajdev](https://github.com/muhammadsirajdev)
+- **Abdul Muizz** [a-muizz28](https://github.com/a-muizz28)
